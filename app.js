@@ -3,8 +3,10 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var youtubedl = require('youtube-dl')
 
 var indexRouter = require('./routes/index');
+var apiRouter = require('./routes/api')
 
 var app = express();
 const port = 4001;
@@ -20,6 +22,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.use('/api/v1', apiRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -37,13 +40,7 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-app.post("/api/v1/getclip", (req, res) =>{
-  videoPath = downloadVideo(req.params["url"]);  
-  clipPath = cutVideo = (videoPath, req.params["from"], req.params["to"])
-  res.status = 200;
-  if (clipPath === '') res.status = 400;
-  res.download(clipPath)  
-})
+
 
 app.listen(port, () => {
   console.log(`> --- START YTCLIPPER ---`);
