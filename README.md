@@ -7,8 +7,8 @@ Simple web application to create clips from youtube videos and download them.
 4. Download Clip
 
 ## TODO
-- input validation
-- let users enter the endtime instead of duration
+[x] input validation
+[x] let users enter the endtime instead of duration
 - add loading screen or some kind of progress indicator
 - embed video player into the site
 - let users set start and endtime using a slider embedded in the video player
