@@ -2,8 +2,20 @@ const youtubedl = require('youtube-dl')
 const ffmpeg = require('fluent-ffmpeg')
 const fs = require('fs')
 
+const getVideoDurationAsync = async (url) => new Promise(resolve => {
+    youtubedl.getInfo(url, (err, info) => {
+        'use strict'
+        if (err) {
+            throw err
+        }
+        resolve(info.duration);
+    })
+})
+
+    
+
 const downloadVideoAsync = async (url, videoPath, videoName, callback) =>
-new Promise(resolve => {
+    new Promise(resolve => {
         const video = youtubedl(url);
 
         video.on('info', info => {
@@ -20,16 +32,16 @@ new Promise(resolve => {
             });
         })
     }
-);
+    );
 
-const cutVideoAsync = async (fileName, clipName, from, to) => 
+const cutVideoAsync = async (fileName, clipName, from, to) =>
 
     new Promise(resolve => {
         ffmpeg(fileName).seekInput(from).withDuration(to)
-        .on('end', function () {
-            resolve();
-        })
-        .save(clipName);
+            .on('end', function () {
+                resolve();
+            })
+            .save(clipName);
     })
 
 
@@ -37,4 +49,5 @@ const cutVideoAsync = async (fileName, clipName, from, to) =>
 module.exports = {
     cutVideoAsync,
     downloadVideoAsync,
+    getVideoDurationAsync
 }
