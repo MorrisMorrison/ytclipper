@@ -20,11 +20,11 @@ const getVideoIdByYoutubeUrl = (url) => {
 }
 
 router.post('/createclip', async (req, res) =>{
-  videoprocessing.getVideoDurationAsync(req.body.url).then(duration => {
-    if (!areTimestampsWithinVideoDuration(req.from, req.to, duration)){
-      res.status = 500;
-      return;
-    }
+  // videoprocessing.getVideoDurationAsync(req.body.url).then(duration => {
+  //   if (!areTimestampsWithinVideoDuration(req.from, req.to, duration)){
+  //     res.status = 500;
+  //     return;
+  //   }
 
     if(!isCreateClipRequestValid(req)) {
       res.status = 500;
@@ -40,7 +40,7 @@ router.post('/createclip', async (req, res) =>{
                           res.status = 200;
                           res.send(videoName);
                         });      
-  })
+  // })
 })
 
 const isDownloadRequestValid = (req) => req.query.videoName != '';
