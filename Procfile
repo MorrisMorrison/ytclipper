@@ -1,2 +1,2 @@
-release: :/release.sh
+release: : ./release.sh
 web: node app.js
