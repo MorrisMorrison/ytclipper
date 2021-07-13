@@ -10,6 +10,7 @@ var apiRouter = require('./routes/api')
 
 var app = express();
 const port = process.env.PORT || 4001;
+const baseUrl = process.env.BASE_URL;
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

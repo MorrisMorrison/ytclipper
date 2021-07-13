@@ -5,11 +5,12 @@
             <input class="h-10" type="text" id="url" placeholder="Paste your youtube url here." title='Only valid youtube links will work'>
             <div class="flex pt-5 w-full pb-5">
                 {{!-- <label class='pr-5' for='from'>from</label> --}}
-                <input  step="1" class="w-3/4 without_ampm" type="text" id="from" placeholder="from" title='Provide timestamps as HH:MM:SS.'>
+                <input  step="1" class="w-3/4 without_ampm" type="text" id="from" placeholder="from*" title='Provide timestamps as HH:MM:SS.'>
                 {{!-- <label class='pr-5' for='to'>to</label> --}}
-                <input  step="1" class="w-3/4 without_ampm" type="text" id="to" placeholder="to" title='Provide timestamps as HH:MM:SS.'>
+                <input  step="1" class="w-3/4 without_ampm" type="text" id="to" placeholder="to*" title='Provide timestamps as HH:MM:SS.'>
             </div>
             <button class="bg-green-500 text-white p-3 rounded-lg align-center" onclick="onClipButtonClick()">Clip!</button>
+            <p class="text-gray-400 pt- pl-1">* Please provide timestamps as hh:mm:ss</p>
         </div>
     </div>
 </div>
