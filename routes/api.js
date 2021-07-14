@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const videoprocessing = require('../videoprocessing');
 const path = require('path');
+const {fork} = require('child_process');
+
 const appDir = path.dirname(require.main.filename);
 
 const videoPathTemplate = (appDir + `/videos/`).replace('/bin', '');
@@ -19,7 +21,7 @@ const getVideoIdByYoutubeUrl = (url) => {
     return (match && match[7].length == 11) ? match[7] : false;
 }
 
-router.post('/createclip', async (req, res) => {
+router.post('/createclip', (req, res) => {
     // videoprocessing.getVideoDurationAsync(req.body.url).then(duration => {
     //   if (!areTimestampsWithinVideoDuration(req.from, req.to, duration)){
     //     res.status = 500;
@@ -30,14 +32,40 @@ router.post('/createclip', async (req, res) => {
         res.status = 500;
         return;
     }
-
+    console.log('CREATECLIP HAAALO')
     const videoId = getVideoIdByYoutubeUrl(req.body.url);
     const fileName = videoPathTemplate + videoId + videoFileNameEnding;
     const clipName = videoPathTemplate + videoId + clipFileNameEnding;
+    console.log('CREATECLIP HAAALO22222')
 
-    const videoName = await videoprocessing.downloadVideoAsync(req.body.url, fileName, videoId + ".mp4");
-    const clipNameNew = await videoprocessing.cutVideoAsync(fileName, clipName, req.body.from, req.body.to);
-    res.send(videoId + clipFileNameEnding);
+    const processDownloadVideo = fork('./downloadVideo.js');
+    const processCutVideo = fork('./cutVideo.js');
+
+    console.log('CREATECLIP HAAALO2222233333')
+    const clipFileName =  videoId + '_clip.mp4';
+
+
+    processDownloadVideo.send({url: req.body.url,
+    fileName: fileName,
+    videoName: videoId + '.mp4'});
+    processDownloadVideo.on('message', async (processDownloadResult) => {
+        console.log(processDownloadResult);
+        console.log('DOWNLOAD VIDEO FINISHED IN CHILD PROCESS !!!!')
+        processCutVideo.send({
+            fileName: fileName,
+            clipName: clipName,
+            from: req.body.from,
+            to: req.body.to
+        })
+
+        processCutVideo.on('message', (processCutResult) => {
+            console.log('CUT VIDEO FINISHED IN CHILD PROCESS !!!!')
+            console.log('CLIPNAME!!!' + clipFileName);
+            res.send(clipFileName);
+        })
+    })
+    // await videoprocessing.downloadVideoAsync(req.body.url, fileName, videoId + ".mp4");
+    // await videoprocessing.cutVideoAsync(fileName, clipName, req.body.from, req.body.to);
     // })
 })
 
