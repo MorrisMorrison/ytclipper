@@ -99,6 +99,9 @@ const onClipButtonClick = () => {
                 switch (response.status) {
                     case 201:
                         toastr.success('The download will pop up automatically. This may take a few seconds.', "Download Started.");
+                        const progressBarWrapper = document.getElementById("progressBarWrapper");
+                        progressBarWrapper.classList.remove("invisible");
+
                         const jobId = response.text();
                         jobId.then(jId => {
                             getJobStatus(jId);
@@ -134,6 +137,8 @@ const getJobStatus = (jobId) => {
         switch (res.status) {
             case 200:
                 res.text().then(result => {
+                    const progressBarWrapper = document.getElementById("progressBarWrapper");
+                    progressBarWrapper.classList.add("invisible");
                     window.open('/api/v1/download?videoName=' + result);
                 })
                 break;
