@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var youtubedl = require('youtube-dl')
+const fs = require('fs');
 
 var indexRouter = require('./routes/index');
 var apiRouter = require('./routes/api')
@@ -42,6 +43,7 @@ app.use(function(err, req, res, next) {
 });
 
 
+fs.writeFile('haha.txt', 'asdasdasuiodhnuoasiduoasbnodbnas');
 
 app.listen(port, () => {
   console.log(`> --- START YTCLIPPER ---`);
