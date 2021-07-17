@@ -48,9 +48,7 @@ const cutVideoAsync = (fileName, clipName, from, to) =>
                 console.log('SERVER - CUTVIDEOASYNC - Error occurred while cutting video: ');
                 console.log(error)
             })
-            .save(() => {
-                console.log('SERVER - CUTVIDEOASYNC - Save file to: ' + clipName)
-            });
+            .save(clipName);
     })
 
 
