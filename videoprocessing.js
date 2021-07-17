@@ -30,6 +30,11 @@ const downloadVideoAsync = (url, videoPath, videoName) =>
                 console.log('SERVER - DOWNLOADVIDEOASYNC - Downloading video finished');
                 resolve(videoName);
             })
+
+        video.on('error', error => {
+            console.log('SERVER - DOWNLOADVIDEOASYNC - Error occurred while downloading video: ');
+            console.log(error)
+        })
         }
     );
 
@@ -38,6 +43,10 @@ const cutVideoAsync = (fileName, clipName, from, to) =>
         ffmpeg(fileName).seekInput(from).withDuration(to)
             .on('end', function () {
                 resolve(clipName);
+            })
+            .on('error', (error) => {
+                console.log('SERVER - CUTVIDEOASYNC - Error occurred while cutting video: ');
+                console.log(error)
             })
             .save(() => {
                 console.log('SERVER - CUTVIDEOASYNC - Save file to: ' + clipName)

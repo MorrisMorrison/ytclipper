@@ -42,17 +42,30 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+console.log(`SERVER - STARTUP - Check /tmp/videos folder`);
 if (!fs.existsSync('/tmp/videos')){
-  fs.mkdirSync('/tmp/videos');
+  console.log(`SERVER - STARTUP - Create /tmp/videos folder`);
+  try{
+    fs.mkdirSync('/tmp/videos');
+  }catch(err){
+    console.log(err);
+  }
 }
 
+console.log('SERVER - STARTUP - Check ' + appDir + '/videos folder');
 if (!fs.existsSync(appDir + '/videos')){
-  fs.mkdirSync(appDir + '/videos');
+  console.log(`SERVER - STARTUP - Create ` + appDir +'/videos folder');
+
+  try{
+    fs.mkdirSync(appDir + '/videos');
+  }catch(err){
+    console.log(err);
+  }
 }
 
 app.listen(port, () => {
-  console.log(`> --- START YTCLIPPER ---`);
-  console.log(`> --- LISTENING AT PORT ${port} ---`);
+  console.log(`SERVER - STARTUP - Start ytclipper`);
+  console.log(`SERVER - STARTUP - Listening at port ${port}`);
 })
 
 module.exports = app;
