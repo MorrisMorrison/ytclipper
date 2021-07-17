@@ -6,10 +6,10 @@ const { fork } = require('child_process');
 const { strict } = require('assert');
 const { json } = require('body-parser');
 
-// const appDir = path.dirname(require.main.filename);
+const appDir = path.dirname(require.main.filename);
 
-// const videoPathTemplate = (appDir + `/videos/`).replace('/bin', '');
-const videoPathTemplate = (`/tmp/videos/`);
+const videoPathTemplate = (appDir + `/videos/`).replace('/bin', '');
+// const videoPathTemplate = (`/tmp/videos/`);
 const videoFileNameEnding = ".mp4"
 const clipFileNameEnding = "_clip" + videoFileNameEnding;
 
