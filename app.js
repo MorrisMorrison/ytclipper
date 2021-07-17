@@ -43,7 +43,12 @@ app.use(function(err, req, res, next) {
 });
 
 
-fs.writeFile('haha.txt', 'asdasdasuiodhnuoasiduoasbnodbnas');
+fs.writeFile('haha.txt', 'asdasdasuiodhnuoasiduoasbnodbnas', err => {
+  if(err){
+    console.log(err);
+    return;
+  }
+});
 
 app.listen(port, () => {
   console.log(`> --- START YTCLIPPER ---`);
