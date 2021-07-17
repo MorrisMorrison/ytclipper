@@ -12,7 +12,7 @@ var apiRouter = require('./routes/api')
 var app = express();
 const port = process.env.PORT || 4001;
 const baseUrl = process.env.BASE_URL;
-
+const appDir = path.dirname(require.main.filename);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
@@ -42,13 +42,13 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+if (!fs.existsSync('/tmp/videos')){
+  fs.mkdirSync('/tmp/videos');
+}
 
-fs.writeFile('haha.txt', 'asdasdasuiodhnuoasiduoasbnodbnas', err => {
-  if(err){
-    console.log(err);
-    return;
-  }
-});
+if (!fs.existsSync(appDir + '/videos')){
+  fs.mkdirSync(appDir + '/videos');
+}
 
 app.listen(port, () => {
   console.log(`> --- START YTCLIPPER ---`);
