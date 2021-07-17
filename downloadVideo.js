@@ -1,9 +1,7 @@
 const videoprocessing = require('./videoprocessing');
 
 process.on('message', async(message) => {
-    console.log('DINGDINGDINGDING')
     const result = await videoprocessing.downloadVideoAsync(message.url, message.fileName, message.videoName);
-    console.log("DINGDINGDING RESZT" + result);
     process.send(result);
 })
 

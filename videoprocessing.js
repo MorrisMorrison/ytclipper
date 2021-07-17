@@ -18,14 +18,16 @@ const downloadVideoAsync = (url, videoPath, videoName) =>
             const video = youtubedl(url);
 
             video.on('info', info => {
-                console.log('SERVER -- Download started')
-                console.log('SERVER -- filename: ' + info._filename)
-                console.log('SERVER -- size: ' + info.size)
+                console.log('SERVER - DOWNLOADVIDEOASYNC - Download started')
+                console.log('SERVER - DOWNLOADVIDEOASYNC - Download filename: ' + info._filename)
+                console.log('SERVER - DOWNLOADVIDEOASYNC - Download size: ' + info.size)
             })
 
+            console.log('SERVER - DOWNLOADVIDEOASYNC - Create filestream to: ' + videoPath);
             video.pipe(fs.createWriteStream(videoPath));
 
             video.on('end', info => {
+                console.log('SERVER - DOWNLOADVIDEOASYNC - Downloading video finished');
                 resolve(videoName);
             })
         }
@@ -37,7 +39,9 @@ const cutVideoAsync = (fileName, clipName, from, to) =>
             .on('end', function () {
                 resolve(clipName);
             })
-            .save(clipName);
+            .save(() => {
+                console.log('SERVER - CUTVIDEOASYNC - Save file to: ' + clipName)
+            });
     })
 
 
