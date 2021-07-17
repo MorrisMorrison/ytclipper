@@ -107,7 +107,9 @@ router.post('/createclip', (req, res) => {
         videoName: videoId + '.mp4'
     });
 
-    console.log('SERVER - CREATECLIP - Downloading video in child process started.')
+    console.log('SERVER - CREATECLIP - Downloading video in child process started.');
+    console.log('SERVER - CREATECLIP - Downloading video from url: ' + req.body.url + ".");
+    console.log('SERVER - CREATECLIP - Saving downloaded video in: ' + fileName + ".");
 
     processDownloadVideo.on('message', async (processDownloadResult) => {
         console.log('SERVER - CREATECLIP - Downloading video finished.')
