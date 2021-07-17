@@ -42,26 +42,26 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-console.log(`SERVER - STARTUP - Check /tmp/videos folder`);
-if (!fs.existsSync('/tmp/videos')){
-  console.log(`SERVER - STARTUP - Create /tmp/videos folder`);
-  try{
-    fs.mkdirSync('/tmp/videos');
-  }catch(err){
-    console.log(err);
-  }
-}
-
-console.log('SERVER - STARTUP - Check ' + appDir + '/videos folder');
-if (!fs.existsSync(appDir + '/videos')){
-  console.log(`SERVER - STARTUP - Create ` + appDir +'/videos folder');
-
-  try{
-    fs.mkdirSync(appDir + '/videos');
-  }catch(err){
-    console.log(err);
-  }
-}
+// console.log(`SERVER - STARTUP - Check /tmp/videos folder`);
+// if (!fs.existsSync('/tmp/videos')){
+//   console.log(`SERVER - STARTUP - Create /tmp/videos folder`);
+//   try{
+//     fs.mkdirSync('/tmp/videos');
+//   }catch(err){
+//     console.log(err);
+//   }
+// }
+//
+// console.log('SERVER - STARTUP - Check ' + appDir + '/videos folder');
+// if (!fs.existsSync(appDir + '/videos')){
+//   console.log(`SERVER - STARTUP - Create ` + appDir +'/videos folder');
+//
+//   try{
+//     fs.mkdirSync(appDir + '/videos');
+//   }catch(err){
+//     console.log(err);
+//   }
+// }
 
 app.listen(port, () => {
   console.log(`SERVER - STARTUP - Start ytclipper`);
