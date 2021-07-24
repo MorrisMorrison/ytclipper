@@ -73,7 +73,7 @@ router.get('/getjobstatus', (req, res) => {
 router.post('/createclip', (req, res) => {
     console.log('SERVER - CREATECLIP')
     if (!isCreateClipRequestValid(req)) {
-        res.status = 500;
+        res.status(500);
         return;
     }
     console.log('SERVER - CREATECLIP - Request is valid')
@@ -82,7 +82,7 @@ router.post('/createclip', (req, res) => {
     var jobId = getJobId();
     // Everything is busy
     if (jobId == -1) {
-        res.status = 500;
+        res.status(500);
         return;
     }
 
@@ -141,7 +141,7 @@ const isDownloadRequestValid = (req) => req.query.videoName != '';
 router.get('/download', (req, res) => {
     console.log('SERVER - DOWNLOAD')
     if (!isDownloadRequestValid(req)) {
-        res.status = 500;
+        res.status(500);
         return;
     }
     res.download(videoPathTemplate + req.query.videoName);
@@ -152,12 +152,11 @@ router.get('/getvideoduration', async (req, res) => {
     console.log('SERVER - GETVIDEODURATION');
 
     if (!isGetVideoDurationRequestValid(req)) {
-        res.status = 500;
+        res.status(500);
         return;
     }
     videoprocessing.getVideoDurationAsync(req.query.youtubeUrl).then(duration => {
-        res.status = 200;
-        res.send(duration);
+        res.status(200).send(duration);
     })
 })
 

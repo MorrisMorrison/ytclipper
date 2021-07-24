@@ -1,4 +1,4 @@
-const timeObject2Seconds = (time) => (time.hours / 60 / 60) + (time.minutes / 60) + time.seconds;
+const timeObject2Seconds = (time) => (time.hours * 60 * 60) + (time.minutes * 60) + time.seconds;
 const isTimeInputValid = (time) => /([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]/g.test(time);
 // const isTimeInputValid = (time) => time.match(/^\d?\d(?::\d{2}){2}$/);
 const isYoutubeUrlValid = (url) => /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/.test(url);
@@ -41,9 +41,9 @@ const getTimeAsObject = (time) => {
     }
 
     return {
-        hours: hours,
-        minutes: minutes,
-        seconds: seconds
+        hours: parseInt(hours),
+        minutes: parseInt(minutes),
+        seconds: parseInt(seconds)
     }
 }
 
@@ -73,6 +73,7 @@ const onClipButtonClick = () => {
     getVideoDuration(youtubeUrl).then(videoDuration => {
         from = timeObject2Seconds(getTimeAsObject(from));
         to = timeObject2Seconds(getTimeAsObject(to));
+        videoDuration = timeObject2Seconds(getTimeAsObject(videoDuration));
 
         if (!isTimestampWithinDuration(parseInt(from), videoDuration) || !isTimestampWithinDuration(parseInt(to), videoDuration)) {
             toastr.error('Please use timestamps that are within the videos duration.', 'Invalid Timestamps.');

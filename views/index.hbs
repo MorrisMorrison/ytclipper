@@ -2,16 +2,16 @@
     <div id="searchGroup" class="flex flex-col items-center justify-center w-full" style="height:90%">
         <div class="pb-14 flex flex-col w-96">
             <h1 class="text-green-500 text-3xl pb-3">{{applicationName}}</h1>
-            <input class="h-10 dark:bg-gray-800" type="text" id="url" placeholder="Paste your youtube url here." title='Only valid youtube links will work'>
+            <input class="h-10 dark:bg-gray-800 dark:text-gray-400" type="text" id="url" placeholder="Paste your youtube url here." title='Only valid youtube links will work'>
             <div class="flex pt-5 w-full pb-5">
                 {{!-- <label class='pr-5' for='from'>from</label> --}}
-                <input  step="1" class="w-3/4 without_ampm dark:bg-gray-800" type="text" id="from" placeholder="from*" title='Provide timestamps as HH:MM:SS.'>
+                <input  step="1" class="w-3/4 without_ampm dark:bg-gray-800 dark:text-gray-400" type="text" id="from" placeholder="from*" title='Provide timestamps as HH:MM:SS.'>
                 {{!-- <label class='pr-5' for='to'>to</label> --}}
-                <input  step="1" class="w-3/4 without_ampm dark:bg-gray-800" type="text" id="to" placeholder="to*" title='Provide timestamps as HH:MM:SS.'>
+                <input  step="1" class="w-3/4 without_ampm dark:bg-gray-800 dark:text-gray-400" type="text" id="to" placeholder="to*" title='Provide timestamps as HH:MM:SS.'>
             </div>
             <button class="bg-green-500 text-white p-3 rounded-lg align-center" onclick="onClipButtonClick()">Clip!</button>
             <p class="text-gray-400 pt- pl-1">* Please provide timestamps as hh:mm:ss</p>
-            <div id="progressBarWrapper" class="invisible pt-3">input chec
+            <div id="progressBarWrapper" class="invisible pt-3">
                 <div class="progress">
                     <div class="progress-bar-custom bg-green-500"></div>
                 </div>
