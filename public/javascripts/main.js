@@ -1,22 +1,7 @@
 const timeObject2Seconds = (time) => (time.hours * 60 * 60) + (time.minutes * 60) + time.seconds;
 const isTimeInputValid = (time) => /([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]/g.test(time);
-// const isTimeInputValid = (time) => time.match(/^\d?\d(?::\d{2}){2}$/);
 const isYoutubeUrlValid = (url) => /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/.test(url);
-const getVideoDuration = async (youtubeUrl) =>
-    new Promise(resolve => {
-        const url = window.location.href + "api/v1/getvideoduration?youtubeUrl=" + youtubeUrl;
-        fetch(url, {
-            method: 'GET',
-        }).then(res => {
-            if (res.status = 200) {
-                const durationInSeconds = res.text();
-                resolve(durationInSeconds);
-            }
-        });
-    });
-
 const isTimestampWithinDuration = (timestamp, duration) => timestamp <= duration;
-
 
 const getTimeAsObject = (time) => {
 
@@ -47,6 +32,39 @@ const getTimeAsObject = (time) => {
     }
 }
 
+const enableProgressBar = () => {
+    const progressBarWrapper = document.getElementById("progressBarWrapper");
+    // progressBarWrapper.classList.remove("invisible");
+    const progress = document.createElement('div');
+    progress.id =  'progress';
+    progress.classList.add('progress');
+    const progressBar = document.createElement('div');
+    progressBar.id = 'progressBar';
+    progressBar.classList.add('progress-bar-custom');
+    progressBar.classList.add('bg-green-500');
+    progress.appendChild(progressBar);
+    progressBarWrapper.appendChild(progress);
+}
+
+const disableProgressBar = () => {
+    const progressBarWrapper = document.getElementById("progressBarWrapper");
+    const progress = document.getElementById("progress");
+    // progressBarWrapper.classList.add("invisible");
+    progressBarWrapper.removeChild(progress);
+}
+
+const getVideoDuration = async (youtubeUrl) =>
+    new Promise(resolve => {
+        const url = window.location.href + "api/v1/getvideoduration?youtubeUrl=" + youtubeUrl;
+        fetch(url, {
+            method: 'GET',
+        }).then(res => {
+            if (res.status = 200) {
+                const durationInSeconds = res.text();
+                resolve(durationInSeconds);
+            }
+        });
+    });
 
 const onClipButtonClick = () => {
     const url = window.location.href + 'api/v1/createclip'
@@ -100,8 +118,7 @@ const onClipButtonClick = () => {
                 switch (response.status) {
                     case 201:
                         toastr.success('The download will pop up automatically. This may take a few seconds.', "Download Started.");
-                        const progressBarWrapper = document.getElementById("progressBarWrapper");
-                        progressBarWrapper.classList.remove("invisible");
+                        enableProgressBar();
 
                         const jobId = response.text();
                         jobId.then(jId => {
@@ -120,16 +137,6 @@ const onClipButtonClick = () => {
     });
 }
 
-const downloadVideo = (videoName) => {
-    const url = window.location.href + 'api/v1/download?videoName=' + videoName;
-    fetch(url, {
-        method: 'GET',
-    }).then(res => {
-        if (res.status == 200) {
-        }
-    });
-}
-
 const getJobStatus = (jobId) => {
     const url = window.location.href + 'api/v1/getjobstatus?jobId=' + jobId;
     fetch(url, {
@@ -138,8 +145,7 @@ const getJobStatus = (jobId) => {
         switch (res.status) {
             case 200:
                 res.text().then(result => {
-                    const progressBarWrapper = document.getElementById("progressBarWrapper");
-                    progressBarWrapper.classList.add("invisible");
+                    disableProgressBar();
                     window.open('/api/v1/download?videoName=' + result);
                 })
                 break;
@@ -155,19 +161,11 @@ const getJobStatus = (jobId) => {
         }
 
     });
-
-
-}
-const resetInputValues = () => {
-    document.getElementById('url').value = '';
-    document.getElementById('from').value = '';
-    document.getElementById('to').value = '';
 }
 
 
 const handleDarkMode = () => {
     console.log(localStorage.theme);
-    // On page load or when changing themes, best to add inline in `head` to avoid FOUC
     if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.documentElement.classList.add('dark')
     } else {
@@ -182,7 +180,6 @@ const setTheme = ()=> {
     else if(localStorage.theme === 'light'){
         localStorage.theme = 'dark'
     }
-
     handleDarkMode();
 }
 

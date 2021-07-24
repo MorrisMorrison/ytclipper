@@ -3,20 +3,14 @@ const router = express.Router();
 const videoprocessing = require('../videoprocessing');
 const path = require('path');
 const { fork } = require('child_process');
-const { strict } = require('assert');
-const { json } = require('body-parser');
 
 const appDir = path.dirname(require.main.filename);
 
 const videoPathTemplate = (appDir + `/videos/`).replace('/bin', '');
-// const videoPathTemplate = (`/tmp/videos/`);
 const videoFileNameEnding = ".mp4"
 const clipFileNameEnding = "_clip" + videoFileNameEnding;
 
 const isYoutubeUrlValid = (url) => /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/.test(url);
-const areTimestampsWithinVideoDuration = (from, to, duration) => {
-    return true;
-}
 const isCreateClipRequestValid = (req) => (req.body != '') && (req.body.url != '') && isYoutubeUrlValid(req.body.url);
 const getVideoIdByYoutubeUrl = (url) => {
     const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
@@ -77,7 +71,6 @@ router.post('/createclip', (req, res) => {
         return;
     }
     console.log('SERVER - CREATECLIP - Request is valid')
-
 
     var jobId = getJobId();
     // Everything is busy
