@@ -162,3 +162,30 @@ const resetInputValues = () => {
     document.getElementById('from').value = '';
     document.getElementById('to').value = '';
 }
+
+
+const handleDarkMode = () => {
+    console.log(localStorage.theme);
+    // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark')
+    } else {
+        document.documentElement.classList.remove('dark')
+    }
+}
+
+const setTheme = ()=> {
+    if (localStorage.theme === 'dark'){
+        localStorage.theme = 'light'
+    }
+    else if(localStorage.theme === 'light'){
+        localStorage.theme = 'dark'
+    }
+
+    handleDarkMode();
+}
+
+window.onload = () => {
+    localStorage.theme = 'dark';
+    handleDarkMode();
+}
