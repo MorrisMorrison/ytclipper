@@ -18,11 +18,17 @@ Simple web application to create clips from youtube videos and download them.
 ### Requirements
 - node
 
-###Setup
+### Setup
 1. Install the required packages
 `npm i`
 2. Run the app
 `npm run start`
+
+Or run as docker container 
+`docker build -t ytclipper .`
+
+### Configuration
+- Port can be configured via env variable PORT (default 4001)
 
 
 
