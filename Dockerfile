@@ -5,6 +5,7 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 
+RUN apt install python3
 RUN npm install
 
 # If you are building your code for production
