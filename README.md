@@ -14,6 +14,18 @@ Simple web application to create clips from youtube videos and download them.
 - tailwind css
 - toastr
 
+## Run locally
+### Requirements
+- node
+
+###Setup
+1. Install the required packages
+`npm i`
+2. Run the app
+`npm run start`
+
+
+
 ## TODO
 - [x] input validation
 - [x] let users enter the end time instead of duration
