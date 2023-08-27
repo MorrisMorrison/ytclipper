@@ -19,7 +19,7 @@ const showDownloadLink = (downloadUrl) => {
     const downloadLinkUrlWrapper = document.getElementById("downloadLinkWrapper");
     
     const downloadLink = document.getElementById("downloadLink");
-    downloadLink.href = downloadLink;
+    downloadLink.setAttribute('href', downloadUrl);
 
     downloadLinkUrlWrapper.classList.remove('hidden');
 }
