@@ -12,7 +12,7 @@ youtubedl(url, {
 const downloadVideoAsync = (url, videoPath, videoName) =>
   new Promise((resolve) => {
     console.log(videoName);
-    youtubedl(url,{output: videoPath}).then(res => {console.log(res);resolve(videoName)});
+    youtubedl(url,{output: videoPath, format: "mp4"}).then(res => {console.log(res);resolve(videoName)});
   });
 
 const cutVideoAsync = (fileName, clipName, from, to) =>
