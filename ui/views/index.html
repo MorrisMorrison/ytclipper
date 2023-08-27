@@ -1,31 +1,40 @@
 <html class="h-full w-full dark">
-  <head>
 
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
 
-      <title>ytclipper</title>
-<link rel='stylesheet' href='/custom.css' />
-<link rel='stylesheet' href='/tailwind.css' />
-<link rel='stylesheet' href='//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css' />
-<script
-			  src="https://code.jquery.com/jquery-3.6.0.min.js"
-			  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-			  crossorigin="anonymous"></script>
-<script type='text/javascript' src='/main.js'></script>
-<script type='text/javascript' src=' //cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js'></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  </head>
-  <body class="h-full w-full">
+    <title>ytclipper</title>
+    <link rel='stylesheet' href='/custom.css' />
+    <link rel='stylesheet' href='/tailwind.css' />
+    <link rel='stylesheet' href='//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css' />
+    <link rel="stylesheet" href="//vjs.zencdn.net/8.3.0/video-js.min.css">
+    <link type="text/css" rel="stylesheet" href="/video-js.min.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script type='text/javascript' src='/main.js'></script>
+    <script type='text/javascript' src=' //cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js'></script>
+    <script type='text/javascript' src="//vjs.zencdn.net/8.3.0/video.min.js"></script>
+</head>
+
+<body class="h-full w-full">
     <div id="main" class="w-full h-full bg-white dark:bg-gray-800">
         <div id="searchGroup" class="flex flex-col items-center justify-center w-full" style="height:90%">
             <div class="pb-14 flex flex-col w-96">
                 <h1 class="text-green-500 text-3xl pb-3">ytclipper</h1>
-                <input class="h-10 dark:bg-gray-800 dark:text-gray-400" type="text" id="url" placeholder="Paste your youtube url here." title='Only valid youtube links will work'>
+                <input class="h-10 dark:bg-gray-800 dark:text-gray-400" type="text" id="url"
+                    placeholder="Paste your youtube url here." title='Only valid youtube links will work'>
+                <video id="vid1" class="video-js vjs-default-skin" controls autoplay width="640" height="264"
+                    data-setup='{ "techOrder": ["youtube"], "sources": [{ "type": "video/youtube", "src": "https://www.youtube.com/watch?v=xjS6SftYQaQ"}] }'>
+                </video>
                 <div class="flex pt-5 w-full pb-5">
-                    <input  step="1" class="w-3/4 without_ampm dark:bg-gray-800 dark:text-gray-400" type="text" id="from" placeholder="from*" title='Provide timestamps as HH:MM:SS.'>
-                    <input  step="1" class="w-3/4 without_ampm dark:bg-gray-800 dark:text-gray-400" type="text" id="to" placeholder="to*" title='Provide timestamps as HH:MM:SS.'>
+                    <input step="1" class="w-3/4 without_ampm dark:bg-gray-800 dark:text-gray-400" type="text" id="from"
+                        placeholder="from*" title='Provide timestamps as HH:MM:SS.'>
+                    <input step="1" class="w-3/4 without_ampm dark:bg-gray-800 dark:text-gray-400" type="text" id="to"
+                        placeholder="to*" title='Provide timestamps as HH:MM:SS.'>
                 </div>
-                <button class="bg-green-500 text-white p-3 rounded-lg align-center" onclick="onClipButtonClick()">Clip!</button>
+                <button class="bg-green-500 text-white p-3 rounded-lg align-center"
+                    onclick="onClipButtonClick()">Clip!</button>
                 <p class="text-gray-400 pt- pl-1">* Please provide timestamps as hh:mm:ss</p>
                 <div id="progressBarWrapper" class="pt-3 hidden">
                     <div id="progress" class="progress">
@@ -34,7 +43,8 @@
                     </div>
                 </div>
                 <div id="downloadLinkWrapper" class="pt-3 hidden">
-                    <span class="text-gray-400">If the download has not started automatically, you can download the file using the following link: <a class="text-blue-400" id="downloadLink">here</a></span>
+                    <span class="text-gray-400">If the download has not started automatically, you can download the file
+                        using the following link: <a class="text-blue-400" id="downloadLink">here</a></span>
                 </div>
             </div>
         </div>
@@ -46,5 +56,9 @@
             </label>
         </div>
     </div>
-  </body>
+
+    <script src="/video.min.js"></script>
+    <script src="/Youtube.min.js"></script>
+</body>
+
 </html>
