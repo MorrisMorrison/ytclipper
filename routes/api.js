@@ -93,8 +93,8 @@ router.post('/createclip', (req, res) => {
 
     console.log('SERVER - CREATECLIP - VideoId extracted')
 
-    const processDownloadVideo = fork('./downloadVideo.js');
-    const processCutVideo = fork('./cutVideo.js');
+    const processDownloadVideo = fork('core/downloadVideo.js');
+    const processCutVideo = fork('core/cutVideo.js');
     const clipFileName = videoId + '_clip.mp4';
 
     processDownloadVideo.send({

@@ -17,6 +17,9 @@ Simple web application to create clips from youtube videos and download them.
 ## Run locally
 ### Requirements
 - node
+- python3
+- ffmpeg
+- certifi
 
 ### Setup
 1. Install the required packages

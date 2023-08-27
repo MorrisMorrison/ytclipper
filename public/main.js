@@ -150,6 +150,7 @@ const getJobStatus = (jobId) => {
                 })
                 break;
             case 201:
+                console.log("AGAIN")
                 setTimeout(() => getJobStatus(jobId), 2000);
                 break;
             case 400:

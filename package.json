@@ -21,10 +21,10 @@
     "postcss": "^8.4.28",
     "postcss-cli": "^10.1.0",
     "yarn": "^1.22.19",
-    "youtube-dl": "~3.4.1"
+    "youtube-dl-exec": "~2.4.7"
   },
   "devDependencies": {
-    "tailwindcss": "^2.2.4",
-    "copyfiles":"^2.4.1"
+    "copyfiles": "^2.4.1",
+    "tailwindcss": "^2.2.4"
   }
 }
