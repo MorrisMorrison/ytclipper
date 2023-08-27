@@ -10,10 +10,6 @@ var apiRouter = require('./routes/api')
 var app = express();
 const port = process.env.PORT || 4001;
 
-// view engine setup
-app.set('views', path.join(__dirname, './ui/views'));
-app.set('view engine', 'hbs');
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

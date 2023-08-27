@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "yarn build && node app.js",
-    "build": "yarn build:css && copyfiles -f ui/scripts/* public/",
+    "build": "yarn build:css && copyfiles -f ui/scripts/* public/ && copyfiles -f ui/views/* public/",
     "build:css": "postcss ui/styles/tailwind.css -o public/tailwind.css && postcss ui/styles/custom.css -o public/custom.css"
   },
   "dependencies": {
@@ -15,7 +15,6 @@
     "express": "^4.18.2",
     "fluent-ffmpeg": "^2.1.2",
     "fs": "^0.0.1-security",
-    "hbs": "^4.2.0",
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
     "postcss": "^8.4.28",
