@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const videoprocessing = require('../videoprocessing');
+const videoprocessing = require('../core/videoprocessing');
 const path = require('path');
 const { fork } = require('child_process');
 
