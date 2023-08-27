@@ -4,33 +4,13 @@ const isYoutubeUrlValid = (url) => /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/wa
 const isTimestampWithinDuration = (timestamp, duration) => timestamp <= duration;
 
 const getTimeAsObject = (time) => {
-
-    const arr = time.split(':');
-    var hours = 0;
-    var minutes = 0;
-    var seconds = 0;
-
-    switch (arr.length) {
-        case 0:
-            seconds = arr[0];
-            break;
-        case 2:
-            minutes = arr[0];
-            seconds = arr[1];
-            break;
-        case 3:
-            hours = arr[0];
-            minutes = arr[1];
-            seconds = arr[2];
-            break;
-    }
-
+    const [hours = 0, minutes = 0, seconds = 0] = time.split(':').map(Number);
     return {
-        hours: parseInt(hours),
-        minutes: parseInt(minutes),
-        seconds: parseInt(seconds)
-    }
-}
+        hours,
+        minutes,
+        seconds
+    };
+};
 
 const enableProgressBar = () => {
     const progressBarWrapper = document.getElementById("progressBarWrapper");
