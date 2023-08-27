@@ -1,17 +1,3 @@
-/*.without_ampm::-webkit-datetime-edit-ampm-field {*/
-/*    display: none;*/
-/*  }*/
-
-/*input[type=time]::-webkit-clear-button {*/
-/*    -webkit-appearance: none;*/
-/*    -moz-appearance: none;*/
-/*    -o-appearance: none;*/
-/*    -ms-appearance:none;*/
-/*    appearance: none;*/
-/*    margin: -10px; */
-/*    display:none;*/
-/*  }*/
-
 .progress {
     background-color: rgb(229,233,235);
     height: 0.2em;
