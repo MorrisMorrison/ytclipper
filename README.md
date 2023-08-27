@@ -26,6 +26,7 @@ Simple web application to create clips from youtube videos and download them.
 
 Or run as docker container 
 `docker build -t ytclipper .`
+`docker run -d -e PORT=4001 -p 8080:4001 ytclipper`
 
 ### Configuration
 - Port can be configured via env variable PORT (default 4001)
