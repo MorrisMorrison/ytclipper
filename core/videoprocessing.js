@@ -1,6 +1,5 @@
 const youtubedl = require("youtube-dl-exec");
 const ffmpeg = require("fluent-ffmpeg");
-const fs = require("fs");
 
 const getVideoDurationAsync = (url) =>
 youtubedl(url, {
@@ -11,7 +10,6 @@ youtubedl(url, {
 
 const downloadVideoAsync = (url, videoPath, videoName) =>
   new Promise((resolve) => {
-    console.log(videoName);
     youtubedl(url,{output: videoPath, format: "mp4"}).then(res => {console.log(res);resolve(videoName)});
   });
 

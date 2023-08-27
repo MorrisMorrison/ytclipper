@@ -32,25 +32,16 @@ const getTimeAsObject = (time) => {
     }
 }
 
-const enableProgressBar = () => {
-    const progressBarWrapper = document.getElementById("progressBarWrapper");
-    // progressBarWrapper.classList.remove("invisible");
-    const progress = document.createElement('div');
-    progress.id =  'progress';
-    progress.classList.add('progress');
-    const progressBar = document.createElement('div');
-    progressBar.id = 'progressBar';
-    progressBar.classList.add('progress-bar-custom');
-    progressBar.classList.add('bg-green-500');
-    progress.appendChild(progressBar);
-    progressBarWrapper.appendChild(progress);
-}
+const showProgressBar = () => document.getElementById("progressBarWrapper").classList.remove('hidden');
+const hideProgressBar = () => document.getElementById("progressBarWrapper").classList.add('hidden');
 
-const disableProgressBar = () => {
-    const progressBarWrapper = document.getElementById("progressBarWrapper");
-    const progress = document.getElementById("progress");
-    // progressBarWrapper.classList.add("invisible");
-    progressBarWrapper.removeChild(progress);
+const showDownloadLink = (downloadUrl) => {
+    const downloadLinkUrlWrapper = document.getElementById("downloadLinkWrapper");
+    
+    const downloadLink = document.getElementById("downloadLink");
+    downloadLink.href = downloadLink;
+
+    downloadLinkUrlWrapper.classList.remove('hidden');
 }
 
 const getVideoDuration = async (youtubeUrl) =>
@@ -118,7 +109,7 @@ const onClipButtonClick = () => {
                 switch (response.status) {
                     case 201:
                         toastr.success('The download will pop up automatically. This may take a few seconds.', "Download Started.");
-                        enableProgressBar();
+                        showProgressBar();
 
                         const jobId = response.text();
                         jobId.then(jId => {
@@ -145,8 +136,10 @@ const getJobStatus = (jobId) => {
         switch (res.status) {
             case 200:
                 res.text().then(result => {
-                    disableProgressBar();
-                    window.open('/api/v1/download?videoName=' + result);
+                    hideProgressBar();
+                    const downloadUrl = '/api/v1/download?videoName=' + result; 
+                    showDownloadLink(downloadUrl);
+                    window.open(downloadUrl);
                 })
                 break;
             case 201:
@@ -162,7 +155,6 @@ const getJobStatus = (jobId) => {
 
     });
 }
-
 
 const handleDarkMode = () => {
     console.log(localStorage.theme);

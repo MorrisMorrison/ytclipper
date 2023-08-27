@@ -11,8 +11,14 @@
             </div>
             <button class="bg-green-500 text-white p-3 rounded-lg align-center" onclick="onClipButtonClick()">Clip!</button>
             <p class="text-gray-400 pt- pl-1">* Please provide timestamps as hh:mm:ss</p>
-            <div id="progressBarWrapper" class="pt-3">
-
+            <div id="progressBarWrapper" class="pt-3 hidden">
+                <div id="progress" class="progress">
+                    <div id="progressBar" class="progress-bar-custom bg-green-500">
+                    </div>
+                </div>
+            </div>
+            <div id="downloadLinkWrapper" class="pt-3 hidden">
+                <p class="text-gray-400">If the download has not started automatically, you can download the file using the following link: <a class="text-blue-400" id="downloadLink">here</a></p>
             </div>
         </div>
     </div>
