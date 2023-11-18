@@ -28,7 +28,6 @@ process.on("message", async (message) => {
       `SERVER - DOWNLOADCLIPHANDLER - Error downloading clip: ${message.clipName} - jobId: ${message.jobId}`,
       error
     );
-    jobStateManager.failJob(message.jobId);
     process.send({ error: error.message });
   }
 });

@@ -113,6 +113,7 @@ router.post("/createclip", async (req, res) => {
       `SERVER - CREATECLIP - Request body: ${JSON.stringify(req.body)}`
     );
     jobStateManager.failJob(jobId);
+    deleteFile(fullDownloadVideoName);
     res.status(500).send();
   }
 });
