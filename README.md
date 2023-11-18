@@ -49,4 +49,6 @@ Or run as docker container
 - [ ] prevent click spamming
 - [ ] automatically delete downloaded videos
 - [x] use yt-dlp to directly cut videos instead of downloading the whole video and then cutting it with ffmpeg manually
+- [ ] track time of jobs
+- [ ] kill suspended jobs after a specified timeput
 - [ ] rewrite in go

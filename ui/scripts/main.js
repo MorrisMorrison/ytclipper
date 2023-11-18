@@ -56,7 +56,7 @@ const getVideoDuration = async (youtubeUrl) => {
       return durationInSeconds;
     }
   } catch (error) {
-    console.error("Error fetching video duration:", error);
+    console.error("CLIENT - GETJOBSTATUS - Error fetching video duration:", error);
     // Handle error
   }
 };
@@ -133,7 +133,7 @@ const onClipButtonClick = async () => {
         break;
     }
   } catch (error) {
-    console.error("An error occurred:", error);
+    console.error("CLIENT - GETJOBSTATUS - An error occurred:", error);
   }
 };
 
@@ -154,16 +154,27 @@ const getJobStatus = async (jobId) => {
       case 201:
         setTimeout(() => getJobStatus(jobId), 2000);
         break;
-      case 400:
       case 408:
         toastr.error(
-          "An error occurred when getting the job status. Please try again in a few minutes or use the contact form.",
-          "Get Job Status"
+          "The download timed out. Please try again in a few minutes or use the contact form.",
+          "Download Timeout"
+        );
+        break;
+      case 500:
+        toastr.error(
+          "An error occurred when downloading the clip. Please try again in a few minutes or use the contact form.",
+          "Download Error"
+        );
+        break;
+      default:
+        toastr.error(
+          "An error occurred when retrieving the job status. Please try again in a few minutes or use the contact form.",
+          "Unknown Error"
         );
         break;
     }
   } catch (error) {
-    console.error("An error occurred:", error);
+    console.error("CLIENT - GETJOBSTATUS - An error occurred:", error);
   }
 };
 

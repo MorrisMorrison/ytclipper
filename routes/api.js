@@ -78,6 +78,7 @@ router.post("/createclip", async (req, res) => {
       clipName: clipFileName,
       from: req.body.from,
       to: req.body.to,
+      jobId: jobId,
     });
 
     console.log(
@@ -102,7 +103,7 @@ router.post("/createclip", async (req, res) => {
     console.error(
       `SERVER - CREATECLIP - Request body: ${JSON.stringify(req.body)}`
     );
-    jobStateManager.removeJob(jobId);
+    jobStateManager.failJob(jobId);
     res.status(500).send();
   }
 });

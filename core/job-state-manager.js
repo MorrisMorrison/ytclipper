@@ -54,8 +54,6 @@ const finishJob = (jobId, clipName) => {
   jobStateManager[jobId] = { status: jobStatus.DONE, clipName };
 };
 
-
-
 const failJob = (jobId, error) => {
   jobStateManager[jobId] = { status: jobStatus.ERROR, error };
 };
