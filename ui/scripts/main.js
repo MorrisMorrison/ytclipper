@@ -1,58 +1,3 @@
-const timeObjectToSeconds = (time) =>
-  time.hours * 60 * 60 + time.minutes * 60 + time.seconds;
-const isTimeInputValid = (time) =>
-  /([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]/g.test(time);
-const isYoutubeUrlValid = (url) =>
-  /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/.test(
-    url
-  );
-const isTimestampWithinDuration = (timestamp, duration) =>
-  timestamp <= duration;
-const getTimeAsObject = (time) => {
-  const [hours = 0, minutes = 0, seconds = 0] = time.split(":").map(Number);
-  return { hours, minutes, seconds };
-};
-
-const getUrlInput = () => document.getElementById("url").value;
-
-const showProgressBar = () =>
-  document.getElementById("progressBarWrapper").classList.remove("hidden");
-const hideProgressBar = () =>
-  document.getElementById("progressBarWrapper").classList.add("hidden");
-const enableClipButton = () =>
-  (document.getElementById("clipButton").disabled = false);
-const disableClipButton = () =>
-  (document.getElementById("clipButton").disabled = true);
-
-const showVideoPlayer = () => {
-  const player = videojs("video-player", {
-    techOrder: ["youtube"],
-    sources: [
-      {
-        type: "video/youtube",
-        src: getUrlInput(),
-      },
-    ],
-  });
-
-  document.getElementById("video-player-wrapper").classList.remove("hidden");
-};
-
-const hideVideoPlayer = () =>
-  document.getElementById("video-player").classList.add("hidden");
-const isVideoPlayerVisible = () =>
-  !document.getElementById("video-player").classList.contains("hidden");
-
-const showDownloadLink = (downloadUrl) => {
-  const downloadLinkUrlWrapper = document.getElementById("downloadLinkWrapper");
-  const downloadLink = document.getElementById("downloadLink");
-  downloadLink.setAttribute("href", downloadUrl);
-  downloadLinkUrlWrapper.classList.remove("hidden");
-};
-
-const hideDownloadLink = () =>
-  document.getElementById("downloadLinkWrapper").classList.add("hidden");
-
 const getVideoDuration = async (youtubeUrl) => {
   const url =
     window.location.href + "api/v1/getvideoduration?youtubeUrl=" + youtubeUrl;
@@ -70,9 +15,6 @@ const getVideoDuration = async (youtubeUrl) => {
     enableClipButton();
   }
 };
-
-const convertToSeconds = (timeString) =>
-  timeObjectToSeconds(getTimeAsObject(timeString));
 
 const onClipButtonClick = async () => {
   disableClipButton();
@@ -202,6 +144,59 @@ const getJobStatus = async (jobId) => {
   }
 };
 
+const onPreviewButtonClick = () => {
+  const url = getUrlInput();
+  if (!isYoutubeUrlValid(url)) {
+    toastr.error("Please provide a valid YouTube URL.", "Invalid Url");
+    return;
+  }
+
+  if (isVideoPlayerVisible()) {
+    hideVideoPlayer();
+  } else {
+    showVideoPlayer();
+  }
+};
+
+const getUrlInput = () => document.getElementById("url").value;
+
+const showProgressBar = () =>
+  document.getElementById("progressBarWrapper").classList.remove("hidden");
+const hideProgressBar = () =>
+  document.getElementById("progressBarWrapper").classList.add("hidden");
+
+const enableClipButton = () =>
+  (document.getElementById("clipButton").disabled = false);
+const disableClipButton = () =>
+  (document.getElementById("clipButton").disabled = true);
+
+const showVideoPlayer = () => {
+  const player = videojs("video-player", {
+    techOrder: ["youtube"],
+    sources: [
+      {
+        type: "video/youtube",
+        src: getUrlInput(),
+      },
+    ],
+  });
+
+  document.getElementById("video-player-wrapper").classList.remove("hidden");
+};
+const hideVideoPlayer = () =>
+  document.getElementById("video-player").classList.add("hidden");
+const isVideoPlayerVisible = () =>
+  !document.getElementById("video-player").classList.contains("hidden");
+
+const showDownloadLink = (downloadUrl) => {
+  const downloadLinkUrlWrapper = document.getElementById("downloadLinkWrapper");
+  const downloadLink = document.getElementById("downloadLink");
+  downloadLink.setAttribute("href", downloadUrl);
+  downloadLinkUrlWrapper.classList.remove("hidden");
+};
+const hideDownloadLink = () =>
+  document.getElementById("downloadLinkWrapper").classList.add("hidden");
+
 const handleDarkMode = () => {
   if (
     localStorage.theme === "dark" ||
@@ -217,20 +212,6 @@ const handleDarkMode = () => {
 const setTheme = () => {
   localStorage.theme = localStorage.theme === "dark" ? "light" : "dark";
   handleDarkMode();
-};
-
-const onPreviewButtonClick = () => {
-  const url = getUrlInput();
-  if (!isYoutubeUrlValid(url)) {
-    toastr.error("Please provide a valid YouTube URL.", "Invalid Url");
-    return;
-  }
-
-  if (isVideoPlayerVisible()) {
-    hideVideoPlayer();
-  } else {
-    showVideoPlayer();
-  }
 };
 
 window.onload = () => {

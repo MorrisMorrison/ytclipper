@@ -1,0 +1,69 @@
+<html class="h-full w-full dark">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ytclipper</title>
+    <link rel="icon" href="/icons/favicon.ico" type="image/x-icon">
+    <link rel='stylesheet' href='/styles/custom.css' />
+    <link rel='stylesheet' href='/styles/tailwind.css' />
+    <link rel='stylesheet' href='//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css' />
+    <link rel="stylesheet" href="/stlylesvideo-js.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script type='text/javascript' src='/scripts/time-utils.js'></script>
+    <script type='text/javascript' src='/scrips/main.js'></script>
+    <script type='text/javascript' src=' //cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js'></script>
+</head>
+
+<body class="h-full w-full">
+    <div id="main" class="w-full h-full bg-white dark:bg-gray-800">
+        <div id="searchGroup" class="flex flex-col items-center justify-center w-full" style="height:90%">
+            <div class="pb-14 flex flex-col w-auto">
+                <h1 class="text-green-500 text-3xl pb-3">ytclipper</h1>
+                <div class="flex flex-row items-center">
+                    <input class="h-10 dark:bg-gray-800 dark:text-gray-400 flex-grow" type="text" id="url"
+                        placeholder="Paste your youtube url here." title='Only valid youtube links will work'>
+                    <button class="bg-green-500 text-white p-3 rounded-lg align-center flex-grow-0"
+                        onclick="onPreviewButtonClick()"><img class="white-icon" src="/icons/eye.svg"
+                            alt="Icon description"></button>
+                </div>
+                <div id="video-player-wrapper" class="hidden pb-5 pt-5 w-full">
+                    <video id="video-player" class="video-js vjs-default-skin hidden" controls autoplay width="640"
+                        height="264"></video>
+                </div>
+
+                <div id="time-inputs" class="flex w-full pb-3 pt-1">
+                    <input step="1" class="w-full without_ampm dark:bg-gray-800 dark:text-gray-400 mr-5" type="text"
+                        id="from" placeholder="from*" title='Provide timestamps as HH:MM:SS.'>
+                    <input step="1" class="w-full without_ampm dark:bg-gray-800 dark:text-gray-400 rl-5" type="text"
+                        id="to" placeholder="to*" title='Provide timestamps as HH:MM:SS.'>
+                </div>
+                <button id="clipButton" class="bg-green-500 text-white p-3 rounded-lg align-center"
+                    onclick="onClipButtonClick()">Clip!</button>
+                <p class="text-gray-400 pt- pl-1">* Please provide timestamps as hh:mm:ss</p>
+                <div id="progressBarWrapper" class="pt-3 hidden">
+                    <div id="progress" class="progress">
+                        <div id="progressBar" class="progress-bar-custom bg-green-500">
+                        </div>
+                    </div>
+                </div>
+                <div id="downloadLinkWrapper" class="pt-3 pl-1 hidden flex flex-col">
+                    <span class="text-gray-400">If the download didn't pop up automatically, you can download the file
+                        <a class="text-blue-400" id="downloadLink">here</a>.</span>
+                </div>
+            </div>
+        </div>
+        <div class="flex items-end justify-end pb-3 pr-3" style="height:10%">
+            <label class="text-gray-400 pr-3 pt-1">DarkMode</label>
+            <label class="switch">
+                <input type="checkbox" id="enableDarkMode" name="enableDarkMode" checked onclick="setTheme()">
+                <span class="slider round"></span>
+            </label>
+        </div>
+    </div>
+
+    <script src="https://vjs.zencdn.net/8.6.1/video.min.js"></script>
+    <script src="/Youtube.min.js"></script>
+</body>
+
+</html>
