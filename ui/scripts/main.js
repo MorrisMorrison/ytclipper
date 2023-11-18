@@ -76,6 +76,7 @@ const convertToSeconds = (timeString) =>
 
 const onClipButtonClick = async () => {
   disableClipButton();
+  hideDownloadLink();
 
   const url = window.location.href + "api/v1/createclip";
   const youtubeUrl = getUrlInput();
