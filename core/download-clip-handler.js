@@ -1,5 +1,4 @@
 const videoprocessing = require("./video-procesor");
-const jobStateManager = require("./job-state-manager");
 
 process.on("message", async (message) => {
   try {
