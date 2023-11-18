@@ -47,3 +47,4 @@ Or run as docker container
 - [ ] prevent click spamming
 - [ ] automatically delete downloaded videos
 - [ ] use yt-dlp to directly cut videos ,so we do not have to download the whole video
+- [ ] rewrite in go

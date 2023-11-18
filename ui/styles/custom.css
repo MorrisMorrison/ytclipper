@@ -138,3 +138,7 @@ input:checked + .slider:before {
 .slider.round:before {
     border-radius: 50%;
 }
+
+.white-icon {
+    filter: brightness(0) invert(1);
+  }

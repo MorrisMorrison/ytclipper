@@ -1,4 +1,5 @@
 <html class="h-full w-full dark">
+
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ytclipper</title>
@@ -15,13 +16,19 @@
 <body class="h-full w-full">
     <div id="main" class="w-full h-full bg-white dark:bg-gray-800">
         <div id="searchGroup" class="flex flex-col items-center justify-center w-full" style="height:90%">
-            <div class="pb-14 flex flex-col w-96">
+            <div class="pb-14 flex flex-col w-auto">
                 <h1 class="text-green-500 text-3xl pb-3">ytclipper</h1>
-                <input class="h-10 dark:bg-gray-800 dark:text-gray-400" type="text" id="url"
-                    placeholder="Paste your youtube url here." title='Only valid youtube links will work'>
-                <video id="vid1" class="video-js vjs-default-skin" controls autoplay width="640" height="264"
-                    data-setup='{ "techOrder": ["youtube"], "sources": [{ "type": "video/youtube", "src": "https://www.youtube.com/watch?v=MiA-DsGumxQ"}] }'>
-                </video>
+                <div class="flex flex-row pb-5 items-center">
+                    <input class="h-10 dark:bg-gray-800 dark:text-gray-400 flex-grow" type="text" id="url"
+                        placeholder="Paste your youtube url here." title='Only valid youtube links will work'>
+                    <button class="bg-green-500 text-white p-3 rounded-lg align-center flex-grow-0"
+                        onclick="onPreviewButtonClick()"><img class="white-icon" src="/icons/eye.svg"
+                            alt="Icon description"></button>
+                </div>
+                <div id="video-player-wrapper" class="hidden">
+                    <video id="video-player" class="video-js vjs-default-skin hidden" controls autoplay width="640" height="264"></video>
+                </div>
+
                 <div class="flex pt-5 w-full pb-5">
                     <input step="1" class="w-3/4 without_ampm dark:bg-gray-800 dark:text-gray-400" type="text" id="from"
                         placeholder="from*" title='Provide timestamps as HH:MM:SS.'>

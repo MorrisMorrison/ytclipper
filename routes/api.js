@@ -103,7 +103,6 @@ router.post("/createclip", async (req, res) => {
 
       cutVideoHandlerFork.on("message", (processCutResult) => {
         console.log("SERVER - CREATECLIP - Cutting video finished");
-        // TODO: delete original video
         deleteFile(fullDownloadVideoName);
 
         jobStateManager.finishJob(jobId, clipFileName);
