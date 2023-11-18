@@ -1,4 +1,4 @@
-const fs = require('fs');
+const fs = require("fs");
 
 const express = require("express");
 const router = express.Router();
@@ -10,8 +10,7 @@ const { fork } = require("child_process");
 const appDir = path.dirname(require.main.filename);
 
 const videoPathTemplate = (appDir + `/videos/`).replace("/bin", "");
-const videoFileNameEnding = ".mp4";
-const clipFileNameEnding = "_clip" + videoFileNameEnding;
+const videoFormat = ".mp4";
 
 const isYoutubeUrlValid = (url) =>
   /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/.test(
@@ -37,6 +36,7 @@ router.get("/getjobstatus", (req, res) => {
 
 router.post("/createclip", async (req, res) => {
   console.log("SERVER - CREATECLIP");
+  console.log("SERVER - CREATECLIP - Request body:" + JSON.stringify(req.body));
   console.log(
     `SERVER - CREATECLIP - Request body: ${JSON.stringify(req.body)}`
   );
@@ -66,18 +66,18 @@ router.post("/createclip", async (req, res) => {
   console.log(`SERVER - CREATECLIP - Job created with id ${jobId}`);
 
   const videoId = getVideoIdByYoutubeUrl(req.body.url);
-  const fullDownloadVideoName = `${videoPathTemplate}${videoId}${videoFileNameEnding}`;
-  const fullClipName = `${videoPathTemplate}${videoId}${clipFileNameEnding}`;
-  const clipFileName = videoId + "_clip.mp4";
+  const fullDownloadVideoName = `${videoPathTemplate}${videoId}${videoFormat}`;
+  const clipFileName = videoId + videoFormat;
 
-  const downloadVideoHandlerFork = fork("core/download-video-handler.js");
-  const cutVideoHandlerFork = fork("core/cut-video-handler.js");
+  const downloadClipHandlerFork = fork("core/download-clip-handler.js");
 
   try {
-    downloadVideoHandlerFork.send({
+    downloadClipHandlerFork.send({
       url: req.body.url,
       fileName: fullDownloadVideoName,
       clipName: clipFileName,
+      from: req.body.from,
+      to: req.body.to,
     });
 
     console.log(
@@ -91,22 +91,9 @@ router.post("/createclip", async (req, res) => {
         fullDownloadVideoName
     );
     // TODO: use values from results
-    downloadVideoHandlerFork.on("message", async (processDownloadResult) => {
-      console.log("SERVER - CREATECLIP - Downloading video finished");
-      cutVideoHandlerFork.send({
-        fileName: fullDownloadVideoName,
-        clipName: fullClipName,
-        from: req.body.from,
-        to: req.body.to,
-      });
-      console.log("SERVER - CREATECLIP - Cutting video started");
-
-      cutVideoHandlerFork.on("message", (processCutResult) => {
-        console.log("SERVER - CREATECLIP - Cutting video finished");
-        deleteFile(fullDownloadVideoName);
-
-        jobStateManager.finishJob(jobId, clipFileName);
-      });
+    downloadClipHandlerFork.on("message", async (_) => {
+      console.log("SERVER - CREATECLIP - Downloading clip finished");
+      jobStateManager.finishJob(jobId, clipFileName);
     });
 
     res.status(201).send(JSON.stringify(jobId));

@@ -1,37 +1,29 @@
 const youtubedl = require("youtube-dl-exec");
-const ffmpeg = require("fluent-ffmpeg");
 
 const getVideoDurationAsync = (url) =>
-youtubedl(url, {
+  youtubedl(url, {
     noWarnings: true,
     skipDownload: true,
     getDuration: true,
   });
 
-const downloadVideoAsync = (url, videoPath, videoName) =>
+// available video formats yt-dlp --list-formats {url}
+// 18  mp4   640x360     30  2 │ ≈ 11.24MiB  282k https │ avc1.42001E         mp4a.40.2       44k [en] 360p
+const downloadVideoAsync = (url, videoPath, videoName, from, to) =>
   new Promise((resolve) => {
-    youtubedl(url,{output: videoPath, format: "mp4"}).then(res => {console.log(res);resolve(videoName)});
-  });
-
-const cutVideoAsync = (fileName, clipName, from, to) =>
-  new Promise((resolve) => {
-    ffmpeg(fileName)
-      .seekInput(from)
-      .withDuration(to)
-      .on("end", function () {
-        resolve(clipName);
-      })
-      .on("error", (error) => {
-        console.log(
-          "SERVER - CUTVIDEOASYNC - Error occurred while cutting video: "
-        );
-        console.log(error);
-      })
-      .save(clipName);
+    const downloaderArgs = `ffmpeg_i:-ss ${from} -to ${to}`;
+    youtubedl(url, {
+      output: videoPath,
+      format: "18",
+      downloader: "ffmpeg",
+      downloaderArgs: downloaderArgs
+    }).then((res) => {
+      console.log(res);
+      resolve(videoName);
+    });
   });
 
 module.exports = {
-  cutVideoAsync,
   downloadVideoAsync,
   getVideoDurationAsync,
 };

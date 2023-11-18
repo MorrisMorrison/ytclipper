@@ -21,6 +21,7 @@ Downloading the clip might take a while depending on the video, as we still down
 ### Requirements
 - node
 - python3
+- ffmpeg
 - certifi?
 
 ### Setup
@@ -46,6 +47,6 @@ Or run as docker container
 - [x] migrate to yt-dlp from youtube-dl
 - [ ] let users set start and end time using a slider embedded in the video player
 - [ ] prevent click spamming
-- [ ] automatically delete downloaded videos (we only delete the video we use to cut)
-- [ ] use yt-dlp to directly cut videos ,so we do not have to download the whole video and can remove all ffmpeg related deps
+- [ ] automatically delete downloaded videos
+- [x] use yt-dlp to directly cut videos instead of downloading the whole video and then cutting it with ffmpeg manually
 - [ ] rewrite in go

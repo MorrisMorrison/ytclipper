@@ -87,13 +87,13 @@ const onClipButtonClick = async () => {
 
   try {
     const videoDuration = await getVideoDuration(youtubeUrl);
-    from = convertToSeconds(from);
-    to = convertToSeconds(to);
-    const duration = convertToSeconds(videoDuration);
+    const fromInSeconds = convertToSeconds(from);
+    const toInSeconds = convertToSeconds(to);
+    const durationInSeconds = convertToSeconds(videoDuration);
 
     if (
-      !isTimestampWithinDuration(from, duration) ||
-      !isTimestampWithinDuration(to, duration)
+      !isTimestampWithinDuration(fromInSeconds, durationInSeconds) ||
+      !isTimestampWithinDuration(toInSeconds, durationInSeconds)
     ) {
       toastr.error(
         "Please use timestamps that are within the video's duration.",
@@ -105,7 +105,7 @@ const onClipButtonClick = async () => {
     const payload = JSON.stringify({
       url: youtubeUrl,
       from: from,
-      to: to - from,
+      to: to,
     });
 
     const headers = {
