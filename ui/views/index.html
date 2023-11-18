@@ -25,17 +25,18 @@
                         onclick="onPreviewButtonClick()"><img class="white-icon" src="/icons/eye.svg"
                             alt="Icon description"></button>
                 </div>
-                <div id="video-player-wrapper" class="hidden pb-5 pt-5">
-                    <video id="video-player" class="video-js vjs-default-skin hidden" controls autoplay width="640" height="264"></video>
+                <div id="video-player-wrapper" class="hidden pb-5 pt-5 w-full">
+                    <video id="video-player" class="video-js vjs-default-skin hidden" controls autoplay width="640"
+                        height="264"></video>
                 </div>
 
                 <div id="time-inputs" class="flex w-full pb-3 pt-1">
-                    <input step="1" class="w-full without_ampm dark:bg-gray-800 dark:text-gray-400 mr-5" type="text" id="from"
-                        placeholder="from*" title='Provide timestamps as HH:MM:SS.'>
-                    <input step="1" class="w-full without_ampm dark:bg-gray-800 dark:text-gray-400 rl-5" type="text" id="to"
-                        placeholder="to*" title='Provide timestamps as HH:MM:SS.'>
+                    <input step="1" class="w-full without_ampm dark:bg-gray-800 dark:text-gray-400 mr-5" type="text"
+                        id="from" placeholder="from*" title='Provide timestamps as HH:MM:SS.'>
+                    <input step="1" class="w-full without_ampm dark:bg-gray-800 dark:text-gray-400 rl-5" type="text"
+                        id="to" placeholder="to*" title='Provide timestamps as HH:MM:SS.'>
                 </div>
-                <button class="bg-green-500 text-white p-3 rounded-lg align-center"
+                <button id="clipButton" class="bg-green-500 text-white p-3 rounded-lg align-center"
                     onclick="onClipButtonClick()">Clip!</button>
                 <p class="text-gray-400 pt- pl-1">* Please provide timestamps as hh:mm:ss</p>
                 <div id="progressBarWrapper" class="pt-3 hidden">
@@ -44,9 +45,9 @@
                         </div>
                     </div>
                 </div>
-                <div id="downloadLinkWrapper" class="pt-3 hidden">
-                    <span class="text-gray-400">If the download has not started automatically, you can download the file
-                        using the following link: <a class="text-blue-400" id="downloadLink">here</a></span>
+                <div id="downloadLinkWrapper" class="pt-3 hidden flex flex-col">
+                    <span class="text-gray-400">If the download didn't pop up automatically, you can download the file
+                        <a class="text-blue-400" id="downloadLink">here</a>.</span>
                 </div>
             </div>
         </div>

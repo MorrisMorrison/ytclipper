@@ -14,7 +14,8 @@ const findAvailableJobId = () => {
     (job) =>
       !job ||
       job.status === jobStatus.ERROR ||
-      job.status === jobStatus.TIMEOUT
+      job.status === jobStatus.TIMEOUT ||
+      job.status === jobStatus.DONE
   );
   return availableJobIndex !== -1 ? availableJobIndex : -1;
 };
