@@ -6,7 +6,7 @@
     "start": "yarn build && node app.js",
     "build": "yarn build:css && yarn build:public && yarn build:video && yarn build:icons",
     "build:css": "postcss ui/styles/tailwind.css -o public/tailwind.css && postcss ui/styles/custom.css -o public/custom.css",
-    "build:icons": "copyfiles -f ui/icons/eye.svg public/icons/",
+    "build:icons": "copyfiles -f ui/icons/eye.svg public/icons/ && copyfiles -f ui/icons/favicon.ico public/icons/",
     "build:video": "copyfiles -f node_modules/videojs-youtube/dist/Youtube.min.js public/ && copyfiles -f node_modules/video.js/dist/video-js.min.css public/",
     "build:public": "copyfiles -f ui/scripts/* public/ && copyfiles -f ui/views/* public/"
   },
