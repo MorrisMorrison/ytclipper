@@ -64,10 +64,10 @@ const removeJob = (jobId) => {
 };
 
 module.exports = {
-    createJob,
-    handleJobStatus,
-    findAvailableJobId,
-    finishJob,
-    removeJob,
-    failJob
-  };
+  createJob,
+  handleJobStatus,
+  findAvailableJobId,
+  finishJob,
+  removeJob,
+  failJob,
+};

@@ -12,8 +12,10 @@ const videoPathTemplate = (appDir + `/videos/`).replace("/bin", "");
 const videoFormat = ".mp4";
 
 router.get("/getvideoduration", async (req, res) => {
-  console.log("SERVER - GETVIDEODURATION - Request query:" + JSON.stringify(req.query));
-  
+  console.log(
+    "SERVER - GETVIDEODURATION - Request query:" + JSON.stringify(req.query)
+  );
+
   const isGetVideoDurationRequestValid = req.query.youtubeUrl !== "";
   if (!isGetVideoDurationRequestValid) {
     return res
@@ -41,7 +43,8 @@ router.post("/createclip", async (req, res) => {
     `SERVER - CREATECLIP - Request body: ${JSON.stringify(req.body)}`
   );
 
-  const isCreateClipRequestValid = req.body && req.body.url && isYoutubeUrlValid(req.body.url);
+  const isCreateClipRequestValid =
+    req.body && req.body.url && isYoutubeUrlValid(req.body.url);
   if (!isCreateClipRequestValid) {
     console.error(`SERVER - CREATECLIP - Invalid request`);
     console.error(
@@ -92,7 +95,7 @@ router.post("/createclip", async (req, res) => {
       "SERVER - CREATECLIP - Saving downloaded video in: " +
         fullDownloadVideoName
     );
-    
+
     downloadClipHandlerFork.on("message", async (result) => {
       if (result.error) {
         console.error(
@@ -121,7 +124,7 @@ router.post("/createclip", async (req, res) => {
 
 router.get("/download", (req, res) => {
   console.log("SERVER - DOWNLOAD - Request query:" + JSON.stringify(req.query));
-  
+
   const isDownloadRequestValid = req.query.videoName !== "";
   if (!isDownloadRequestValid) {
     return res
@@ -131,23 +134,23 @@ router.get("/download", (req, res) => {
 
   const videoFilePath = path.join(videoPathTemplate, req.query.videoName);
   res.download(videoFilePath, (err) => {
-      if (err) {
-        console.error("SERVER - DOWNLOAD - Error:", err);
-        return res.status(500).send("Error downloading the video.");
-      }
-      deleteFile(videoFilePath);
-    });
+    if (err) {
+      console.error("SERVER - DOWNLOAD - Error:", err);
+      return res.status(500).send("Error downloading the video.");
+    }
+    deleteFile(videoFilePath);
+  });
 });
 
 router.get("/getjobstatus", (req, res) => {
-  console.log("SERVER - GETJOBSTATUS - Request query:" + JSON.stringify(req.query));
+  console.log(
+    "SERVER - GETJOBSTATUS - Request query:" + JSON.stringify(req.query)
+  );
   const isRequestValid = req.query.jobId !== "";
   if (!isRequestValid) {
     return res
       .status(400)
-      .send(
-        "Invalid getjobstatus request. Missing or empty jobId parameter."
-      );
+      .send("Invalid getjobstatus request. Missing or empty jobId parameter.");
   }
   const jobId = req.query.jobId;
 
@@ -175,7 +178,9 @@ const deleteFile = (filePath) => {
     if (err) {
       console.error(`SERVER - DELETE FILE - Error deleting file: ${err}`);
     } else {
-      console.log(`SERVER - DELETE FILE - File deleted successfully: ${filePath}`);
+      console.log(
+        `SERVER - DELETE FILE - File deleted successfully: ${filePath}`
+      );
     }
   });
 };

@@ -16,14 +16,19 @@ const downloadVideoAsync = (url, videoPath, videoName, from, to, jobId) =>
       output: videoPath,
       format: "18",
       downloader: "ffmpeg",
-      downloaderArgs: downloaderArgs
-    }).then((res) => {
-      console.log(res);
-      resolve(videoName);
-    }).catch((error) => {
-      console.error(`SERVER - DOWNLOADVIDEOASYNC - Error downloading video for jobId ${jobId}:`, error);
-      reject(error);
-    });
+      downloaderArgs: downloaderArgs,
+    })
+      .then((res) => {
+        console.log(res);
+        resolve(videoName);
+      })
+      .catch((error) => {
+        console.error(
+          `SERVER - DOWNLOADVIDEOASYNC - Error downloading video for jobId ${jobId}:`,
+          error
+        );
+        reject(error);
+      });
   });
 
 module.exports = {

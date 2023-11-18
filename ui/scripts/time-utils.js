@@ -14,4 +14,3 @@ const getTimeAsObject = (time) => {
 };
 const convertToSeconds = (timeString) =>
   timeObjectToSeconds(getTimeAsObject(timeString));
-
