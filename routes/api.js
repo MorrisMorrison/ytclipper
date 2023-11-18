@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 const express = require("express");
 const router = express.Router();
 const videoProcessor = require("../core/video-procesor");
@@ -35,7 +37,9 @@ router.get("/getjobstatus", (req, res) => {
 
 router.post("/createclip", async (req, res) => {
   console.log("SERVER - CREATECLIP");
-  console.log(`SERVER - CREATECLIP - Request body: ${JSON.stringify(req.body)}`);
+  console.log(
+    `SERVER - CREATECLIP - Request body: ${JSON.stringify(req.body)}`
+  );
 
   if (!isCreateClipRequestValid(req)) {
     console.error(`SERVER - CREATECLIP - Invalid request`);
@@ -64,39 +68,47 @@ router.post("/createclip", async (req, res) => {
   const videoId = getVideoIdByYoutubeUrl(req.body.url);
   const fullDownloadVideoName = `${videoPathTemplate}${videoId}${videoFileNameEnding}`;
   const fullClipName = `${videoPathTemplate}${videoId}${clipFileNameEnding}`;
-  const clipFileName = videoId + '_clip.mp4';
-  
-  const downloadVideoHandlerFork = fork('core/download-video-handler.js');
-  const cutVideoHandlerFork = fork('core/cut-video-handler.js');
+  const clipFileName = videoId + "_clip.mp4";
+
+  const downloadVideoHandlerFork = fork("core/download-video-handler.js");
+  const cutVideoHandlerFork = fork("core/cut-video-handler.js");
 
   try {
     downloadVideoHandlerFork.send({
-        url: req.body.url,
-        fileName: fullDownloadVideoName,
-        clipName: clipFileName
+      url: req.body.url,
+      fileName: fullDownloadVideoName,
+      clipName: clipFileName,
     });
 
-    console.log('SERVER - CREATECLIP - Downloading video in child process started');
-    console.log('SERVER - CREATECLIP - Downloading video from url: ' + req.body.url);
-    console.log('SERVER - CREATECLIP - Saving downloaded video in: ' + fullDownloadVideoName);
-    // TODO: use values from results 
-    downloadVideoHandlerFork.on('message', async (processDownloadResult) => {
-        console.log('SERVER - CREATECLIP - Downloading video finished')
-        cutVideoHandlerFork.send({
-            fileName: fullDownloadVideoName,
-            clipName: fullClipName,
-            from: req.body.from,
-            to: req.body.to
-        })
-        console.log('SERVER - CREATECLIP - Cutting video started')
+    console.log(
+      "SERVER - CREATECLIP - Downloading video in child process started"
+    );
+    console.log(
+      "SERVER - CREATECLIP - Downloading video from url: " + req.body.url
+    );
+    console.log(
+      "SERVER - CREATECLIP - Saving downloaded video in: " +
+        fullDownloadVideoName
+    );
+    // TODO: use values from results
+    downloadVideoHandlerFork.on("message", async (processDownloadResult) => {
+      console.log("SERVER - CREATECLIP - Downloading video finished");
+      cutVideoHandlerFork.send({
+        fileName: fullDownloadVideoName,
+        clipName: fullClipName,
+        from: req.body.from,
+        to: req.body.to,
+      });
+      console.log("SERVER - CREATECLIP - Cutting video started");
 
+      cutVideoHandlerFork.on("message", (processCutResult) => {
+        console.log("SERVER - CREATECLIP - Cutting video finished");
+        // TODO: delete original video
+        deleteFile(fullDownloadVideoName);
 
-        cutVideoHandlerFork.on('message', (processCutResult) => {
-            console.log('SERVER - CREATECLIP - Cutting video finished')
-            // TODO: delete original video
-            jobStateManager.finishJob(jobId, clipFileName);
-        })
-    })
+        jobStateManager.finishJob(jobId, clipFileName);
+      });
+    });
 
     res.status(201).send(JSON.stringify(jobId));
   } catch (error) {
@@ -150,5 +162,19 @@ router.get("/getvideoduration", async (req, res) => {
     res.status(500).send("Error getting video duration.");
   }
 });
+
+const deleteFile = (filePath) => {
+  if (!fs.existsSync(filePath)) {
+    console.log(`SERVER - DELETEFILE - File does not exists: ${filePath}`);
+    return;
+  }
+  fs.unlink(filePath, (err) => {
+    if (err) {
+      console.error(`SERVER - DELETE FILE - Error deleting file: ${err}`);
+    } else {
+      console.log("SERVER - DELETE FILE - File deleted successfully");
+    }
+  });
+};
 
 module.exports = router;
