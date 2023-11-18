@@ -1,6 +1,6 @@
 const getVideoDuration = async (youtubeUrl) => {
   const url =
-    window.location.href + "api/v1/getvideoduration?youtubeUrl=" + youtubeUrl;
+    window.location.href + "api/v1/video/duration?youtubeUrl=" + youtubeUrl;
   try {
     const res = await fetch(url, { method: "GET" });
     if (res.status === 200) {
@@ -20,7 +20,7 @@ const onClipButtonClick = async () => {
   disableClipButton();
   hideDownloadLink();
 
-  const url = window.location.href + "api/v1/createclip";
+  const url = window.location.href + "api/v1/clip";
   const youtubeUrl = getUrlInput();
   let from = document.getElementById("from").value;
   let to = document.getElementById("to").value;
@@ -99,7 +99,7 @@ const onClipButtonClick = async () => {
 };
 
 const getJobStatus = async (jobId) => {
-  const url = window.location.href + "api/v1/getjobstatus?jobId=" + jobId;
+  const url = window.location.href + "api/v1/jobs/status?jobId=" + jobId;
 
   try {
     const res = await fetch(url, { method: "GET" });
@@ -108,7 +108,7 @@ const getJobStatus = async (jobId) => {
       case 200:
         const result = await res.text();
         hideProgressBar();
-        const downloadUrl = "/api/v1/download?videoName=" + result;
+        const downloadUrl = "/api/v1/clip?videoName=" + result;
         showDownloadLink(downloadUrl);
         window.open(downloadUrl);
         enableClipButton();

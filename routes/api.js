@@ -11,7 +11,7 @@ const appDir = path.dirname(require.main.filename);
 const videoPathTemplate = (appDir + `/videos/`).replace("/bin", "");
 const videoFormat = ".mp4";
 
-router.get("/getvideoduration", async (req, res) => {
+router.get("/video/duration", async (req, res) => {
   console.log(
     "SERVER - GETVIDEODURATION - Request query:" + JSON.stringify(req.query)
   );
@@ -36,7 +36,7 @@ router.get("/getvideoduration", async (req, res) => {
   }
 });
 
-router.post("/createclip", async (req, res) => {
+router.post("/clip", async (req, res) => {
   console.log("SERVER - CREATECLIP");
   console.log("SERVER - CREATECLIP - Request body:" + JSON.stringify(req.body));
   console.log(
@@ -122,7 +122,7 @@ router.post("/createclip", async (req, res) => {
   }
 });
 
-router.get("/download", (req, res) => {
+router.get("/clip", (req, res) => {
   console.log("SERVER - DOWNLOAD - Request query:" + JSON.stringify(req.query));
 
   const isDownloadRequestValid = req.query.videoName !== "";
@@ -142,7 +142,7 @@ router.get("/download", (req, res) => {
   });
 });
 
-router.get("/getjobstatus", (req, res) => {
+router.get("/job/status", (req, res) => {
   console.log(
     "SERVER - GETJOBSTATUS - Request query:" + JSON.stringify(req.query)
   );
