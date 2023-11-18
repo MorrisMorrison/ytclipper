@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const videoprocessing = require("../core/videoprocessing");
+const jobqueue = require("../core/jobqueue");
 const path = require("path");
 const { fork } = require("child_process");
 
@@ -9,16 +10,6 @@ const appDir = path.dirname(require.main.filename);
 const videoPathTemplate = (appDir + `/videos/`).replace("/bin", "");
 const videoFileNameEnding = ".mp4";
 const clipFileNameEnding = "_clip" + videoFileNameEnding;
-
-const jobStatus = {
-  RUNNING: "running",
-  DONE: "done",
-  ERROR: "error",
-  TIMEOUT: "timeout",
-  CREATED: "created",
-};
-const jobQueue = [];
-const JOB_QUEUE_SIZE = 10;
 
 const isYoutubeUrlValid = (url) =>
   /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/.test(
@@ -35,59 +26,11 @@ const getVideoIdByYoutubeUrl = (url) => {
   return match && match[7] && match[7].length === 11 ? match[7] : false;
 };
 
-const findAvailableJobId = () => {
-  for (let i = 0; i < JOB_QUEUE_SIZE; i++) {
-    const job = jobQueue[i];
-    const isJobIdAvailable =
-      job === undefined ||
-      job === null ||
-      job.status === jobStatus.DONE ||
-      job.status === jobStatus.ERROR ||
-      job.status === jobStatus.TIMEOUT;
-    if (isJobIdAvailable) {
-      return i;
-    }
-  }
-
-  return -1;
-};
-
-const handleJobStatus = (res, jobId) => {
-  const job = jobQueue[jobId];
-
-  if (!job) {
-    res.status(400).send();
-    return;
-  }
-
-  switch (job.status) {
-    case jobStatus.CREATED:
-    case jobStatus.RUNNING:
-      res.status(201).send();
-      break;
-    case jobStatus.DONE:
-      res.status(200).send(job.clipName);
-      break;
-    case jobStatus.TIMEOUT:
-      res.status(408).send();
-      break;
-    case jobStatus.ERROR:
-      res.status(500).send();
-      break;
-    default:
-      res.status(400).send();
-  }
-};
-
-const createJob = (jobId) => {
-  jobQueue[jobId] = { status: jobStatus.CREATED };
-};
-
 router.get("/getjobstatus", (req, res) => {
   console.log("SERVER - GETJOBSTATUS");
   const jobId = req.query.jobId;
 
-  handleJobStatus(res, jobId);
+  jobqueue.handleJobStatus(res, jobId);
 });
 
 router.post("/createclip", async (req, res) => {
@@ -104,7 +47,7 @@ router.post("/createclip", async (req, res) => {
     return;
   }
 
-  const jobId = findAvailableJobId();
+  const jobId = jobqueue.findAvailableJobId();
   if (jobId === -1) {
     console.error(`SERVER - CREATECLIP - Could not find available job id`);
     console.error(
@@ -115,7 +58,7 @@ router.post("/createclip", async (req, res) => {
     return;
   }
   console.log(`SERVER - CREATECLIP - Create job with id ${jobId}`);
-  createJob(jobId);
+  jobqueue.createJob(jobId);
   console.log(`SERVER - CREATECLIP - Job created with id ${jobId}`);
 
   const videoId = getVideoIdByYoutubeUrl(req.body.url);
@@ -150,10 +93,7 @@ router.post("/createclip", async (req, res) => {
 
         processCutVideo.on('message', (processCutResult) => {
             console.log('SERVER - CREATECLIP - Cutting video finished')
-            jobQueue[jobId] = {
-                status: jobStatus.DONE,
-                clipName: clipFileName
-            };
+            jobqueue.finishJob(jobId, clipFileName);
         })
     })
 
@@ -163,7 +103,7 @@ router.post("/createclip", async (req, res) => {
     console.error(
       `SERVER - CREATECLIP - Request body: ${JSON.stringify(req.body)}`
     );
-    jobQueue[jobId] = { status: jobStatus.ERROR };
+    jobqueue.removeJob(jobId);
     res.status(500).send();
   }
 });
