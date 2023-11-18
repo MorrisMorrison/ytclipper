@@ -2,8 +2,6 @@
 Simple web application to create clips from youtube videos and download them.
 The goal of this project is just to play around with unknown technologies.
 
-https://github.com/MorrisMorrison/ytclipper/assets/22982151/c6ce9e64-c5c1-4049-b78e-83c23474dd59
-
 1. Enter YouTube URL
 2. Enter start time (HH:MM:SS)
 3. Enter end time (HH:MM:SS)
