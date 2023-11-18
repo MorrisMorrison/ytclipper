@@ -44,3 +44,6 @@ Or run as docker container
 - [x] add dark mode
 - [ ] embed video player into the site
 - [ ] let users set start and end time using a slider embedded in the video player
+- [ ] prevent click spamming
+- [ ] automatically delete downloaded videos
+- [ ] use yt-dlp to directly cut videos ,so we do not have to download the whole video
