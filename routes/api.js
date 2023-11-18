@@ -1,106 +1,136 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const videoprocessing = require('../core/videoprocessing');
-const path = require('path');
-const { fork } = require('child_process');
+const videoprocessing = require("../core/videoprocessing");
+const path = require("path");
+const { fork } = require("child_process");
 
 const appDir = path.dirname(require.main.filename);
 
-const videoPathTemplate = (appDir + `/videos/`).replace('/bin', '');
-const videoFileNameEnding = ".mp4"
+const videoPathTemplate = (appDir + `/videos/`).replace("/bin", "");
+const videoFileNameEnding = ".mp4";
 const clipFileNameEnding = "_clip" + videoFileNameEnding;
 
-const isYoutubeUrlValid = (url) => /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/.test(url);
-const isCreateClipRequestValid = (req) => (req.body != '') && (req.body.url != '') && isYoutubeUrlValid(req.body.url);
-const getVideoIdByYoutubeUrl = (url) => {
-    const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-    const match = url.match(regExp);
-    return (match && match[7].length == 11) ? match[7] : false;
-}
-
 const jobStatus = {
-    RUNNING: "running",
-    DONE: "done",
-    ERROR: "error",
-    TIMEOUT: "timeout",
-    CREATED: "created"
-}
-var jobQueue = [];
+  RUNNING: "running",
+  DONE: "done",
+  ERROR: "error",
+  TIMEOUT: "timeout",
+  CREATED: "created",
+};
+const jobQueue = [];
+const JOB_QUEUE_SIZE = 10;
 
-const getJobId = () => {
-    for (i = 0; i < 10; i++) {
-        if (jobQueue[i] === undefined || jobQueue[i] === '' && jobQueue[i] || {}) {
-            return i;
-        }
+const isYoutubeUrlValid = (url) =>
+  /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/.test(
+    url
+  );
+
+const isCreateClipRequestValid = (req) =>
+  req.body && req.body.url && isYoutubeUrlValid(req.body.url);
+
+const getVideoIdByYoutubeUrl = (url) => {
+  const regExp =
+    /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+  const match = url.match(regExp);
+  return match && match[7] && match[7].length === 11 ? match[7] : false;
+};
+
+const findAvailableJobId = () => {
+  for (let i = 0; i < JOB_QUEUE_SIZE; i++) {
+    const job = jobQueue[i];
+    const isJobIdAvailable =
+      job === undefined ||
+      job === null ||
+      job.status === jobStatus.DONE ||
+      job.status === jobStatus.ERROR ||
+      job.status === jobStatus.TIMEOUT;
+    if (isJobIdAvailable) {
+      return i;
     }
+  }
 
-    return -1;
-}
+  return -1;
+};
 
+const handleJobStatus = (res, jobId) => {
+  const job = jobQueue[jobId];
 
-router.get('/getjobstatus', (req, res) => {
-    console.log('SERVER - GETJOBSTATUS');
+  if (!job) {
+    res.status(400).send();
+    return;
+  }
 
-    if (jobQueue[req.query.jobId] != undefined && jobQueue[req.query.jobId] != '' && jobQueue[req.query.jobId] != {}) {
-        switch (jobQueue[req.query.jobId].status) {
-            case 'created':
-                res.status(201).send();
-                break;
-            case 'running':
-                res.status(201).send();
-                break;
-            case 'done':
-                res.status(200).send(jobQueue[req.query.jobId].clipName);
-                break;
-            case 'timeout':
-                res.status(408).send();
-                break;
-            case 'error':
-                res.status(500).send();
-                break;
-        }
-    }
+  switch (job.status) {
+    case jobStatus.CREATED:
+    case jobStatus.RUNNING:
+      res.status(201).send();
+      break;
+    case jobStatus.DONE:
+      res.status(200).send(job.clipName);
+      break;
+    case jobStatus.TIMEOUT:
+      res.status(408).send();
+      break;
+    case jobStatus.ERROR:
+      res.status(500).send();
+      break;
+    default:
+      res.status(400).send();
+  }
+};
 
-    res.status(400);
-})
+const createJob = (jobId) => {
+  jobQueue[jobId] = { status: jobStatus.CREATED };
+};
 
-router.post('/createclip', (req, res) => {
-    console.log('SERVER - CREATECLIP')
-    if (!isCreateClipRequestValid(req)) {
-        res.status(500);
-        return;
-    }
-    console.log('SERVER - CREATECLIP - Request is valid')
+router.get("/getjobstatus", (req, res) => {
+  console.log("SERVER - GETJOBSTATUS");
+  const jobId = req.query.jobId;
 
-    var jobId = getJobId();
-    // Everything is busy
-    if (jobId == -1) {
-        res.status(500);
-        return;
-    }
+  handleJobStatus(res, jobId);
+});
 
-    console.log('SERVER - CREATECLIP - JobId is available')
+router.post("/createclip", async (req, res) => {
+  console.log("SERVER - CREATECLIP");
+  console.log(`SERVER - CREATECLIP - Request body: ${JSON.stringify(req.body)}`);
 
-    jobQueue[jobId] = {
-        status: jobStatus.CREATED,
-    }
+  if (!isCreateClipRequestValid(req)) {
+    console.error(`SERVER - CREATECLIP - Invalid request`);
+    console.error(
+      `SERVER - CREATECLIP - Request body: ${JSON.stringify(req.body)}`
+    );
 
-    console.log('SERVER - CREATECLIP - Job created with id ' + jobId)
+    res.status(500).send();
+    return;
+  }
 
-    const videoId = getVideoIdByYoutubeUrl(req.body.url);
-    const fileName = videoPathTemplate + videoId + videoFileNameEnding;
-    const clipName = videoPathTemplate + videoId + clipFileNameEnding;
+  const jobId = findAvailableJobId();
+  if (jobId === -1) {
+    console.error(`SERVER - CREATECLIP - Could not find available job id`);
+    console.error(
+      `SERVER - CREATECLIP - Request body: ${JSON.stringify(req.body)}`
+    );
 
-    console.log('SERVER - CREATECLIP - VideoId extracted')
+    res.status(500).send();
+    return;
+  }
+  console.log(`SERVER - CREATECLIP - Create job with id ${jobId}`);
+  createJob(jobId);
+  console.log(`SERVER - CREATECLIP - Job created with id ${jobId}`);
 
-    const processDownloadVideo = fork('core/downloadVideo.js');
-    const processCutVideo = fork('core/cutVideo.js');
-    const clipFileName = videoId + '_clip.mp4';
+  const videoId = getVideoIdByYoutubeUrl(req.body.url);
+  const fileName = `${videoPathTemplate}${videoId}${videoFileNameEnding}`;
+  const clipName = `${videoPathTemplate}${videoId}${clipFileNameEnding}`;
+  const clipFileName = videoId + '_clip.mp4';
+  
+  const processDownloadVideo = fork('core/downloadVideo.js');
+  const processCutVideo = fork('core/cutVideo.js');
 
+  try {
     processDownloadVideo.send({
         url: req.body.url,
         fileName: fileName,
-        videoName: videoId + '.mp4'
+        clipName: clipFileName
     });
 
     console.log('SERVER - CREATECLIP - Downloading video in child process started');
@@ -128,30 +158,56 @@ router.post('/createclip', (req, res) => {
     })
 
     res.status(201).send(JSON.stringify(jobId));
-})
+  } catch (error) {
+    console.error("SERVER - CREATECLIP - Error:", error);
+    console.error(
+      `SERVER - CREATECLIP - Request body: ${JSON.stringify(req.body)}`
+    );
+    jobQueue[jobId] = { status: jobStatus.ERROR };
+    res.status(500).send();
+  }
+});
 
-const isDownloadRequestValid = (req) => req.query.videoName != '';
-router.get('/download', (req, res) => {
-    console.log('SERVER - DOWNLOAD')
-    if (!isDownloadRequestValid(req)) {
-        res.status(500);
-        return;
+const isDownloadRequestValid = (req) => req.query.videoName !== "";
+router.get("/download", (req, res) => {
+  console.log("SERVER - DOWNLOAD");
+
+  if (!isDownloadRequestValid(req)) {
+    return res
+      .status(400)
+      .send("Invalid download request. Missing or empty videoName parameter.");
+  }
+
+  const videoFilePath = path.join(videoPathTemplate, req.query.videoName);
+  res.download(videoFilePath, (err) => {
+    if (err) {
+      console.error("SERVER - DOWNLOAD - Error:", err);
+      return res.status(500).send("Error downloading the video.");
     }
-    res.download(videoPathTemplate + req.query.videoName);
-})
+  });
+});
 
-const isGetVideoDurationRequestValid = (req) => req.query.youtubeUrl != '';
-router.get('/getvideoduration', async (req, res) => {
-    console.log('SERVER - GETVIDEODURATION');
+const isGetVideoDurationRequestValid = (req) => req.query.youtubeUrl !== "";
+router.get("/getvideoduration", async (req, res) => {
+  console.log("SERVER - GETVIDEODURATION");
 
-    if (!isGetVideoDurationRequestValid(req)) {
-        res.status(500);
-        return;
-    }
-    videoprocessing.getVideoDurationAsync(req.query.youtubeUrl).then(duration => {
-        res.status(200).send(duration);
-    })
-})
+  if (!isGetVideoDurationRequestValid(req)) {
+    return res
+      .status(400)
+      .send(
+        "Invalid getvideoduration request. Missing or empty youtubeUrl parameter."
+      );
+  }
+
+  try {
+    const duration = await videoprocessing.getVideoDurationAsync(
+      req.query.youtubeUrl
+    );
+    res.status(200).send(duration);
+  } catch (error) {
+    console.error("SERVER - GETVIDEODURATION - Error:", error);
+    res.status(500).send("Error getting video duration.");
+  }
+});
 
 module.exports = router;
-

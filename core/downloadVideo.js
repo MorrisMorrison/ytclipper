@@ -2,8 +2,8 @@ const videoprocessing = require('./videoprocessing');
 
 process.on('message', async (message) => {
     try {
-        console.log(`Downloading video from ${message.url} to ${message.fileName}`);
-        const result = await videoprocessing.downloadVideoAsync(message.url, message.fileName, message.videoName);
+        console.log(`Downloading video from ${message.url} to ${message.clipName}`);
+        const result = await videoprocessing.downloadVideoAsync(message.url, message.fileName, message.clipName);
         console.log('Video download completed successfully.');
         process.send(result);
     } catch (error) {

@@ -8,11 +8,11 @@ const getVideoDurationAsync = (url) =>
     getDuration: true,
   });
 
-const downloadVideoAsync = (url, videoPath, videoName) =>
+const downloadVideoAsync = (url, videoPath, clipName) =>
   new Promise((resolve) => {
     youtubedl(url, { output: videoPath, format: "mp4" }).then((res) => {
       console.log(res);
-      resolve(videoName);
+      resolve(clipName);
     });
   });
 
