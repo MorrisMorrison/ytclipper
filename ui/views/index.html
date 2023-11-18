@@ -18,21 +18,21 @@
         <div id="searchGroup" class="flex flex-col items-center justify-center w-full" style="height:90%">
             <div class="pb-14 flex flex-col w-auto">
                 <h1 class="text-green-500 text-3xl pb-3">ytclipper</h1>
-                <div class="flex flex-row pb-5 items-center">
+                <div class="flex flex-row items-center">
                     <input class="h-10 dark:bg-gray-800 dark:text-gray-400 flex-grow" type="text" id="url"
                         placeholder="Paste your youtube url here." title='Only valid youtube links will work'>
                     <button class="bg-green-500 text-white p-3 rounded-lg align-center flex-grow-0"
                         onclick="onPreviewButtonClick()"><img class="white-icon" src="/icons/eye.svg"
                             alt="Icon description"></button>
                 </div>
-                <div id="video-player-wrapper" class="hidden">
+                <div id="video-player-wrapper" class="hidden pb-5 pt-5">
                     <video id="video-player" class="video-js vjs-default-skin hidden" controls autoplay width="640" height="264"></video>
                 </div>
 
-                <div class="flex pt-5 w-full pb-5">
-                    <input step="1" class="w-3/4 without_ampm dark:bg-gray-800 dark:text-gray-400" type="text" id="from"
+                <div id="time-inputs" class="flex w-full pb-3 pt-1">
+                    <input step="1" class="w-full without_ampm dark:bg-gray-800 dark:text-gray-400 mr-5" type="text" id="from"
                         placeholder="from*" title='Provide timestamps as HH:MM:SS.'>
-                    <input step="1" class="w-3/4 without_ampm dark:bg-gray-800 dark:text-gray-400" type="text" id="to"
+                    <input step="1" class="w-full without_ampm dark:bg-gray-800 dark:text-gray-400 rl-5" type="text" id="to"
                         placeholder="to*" title='Provide timestamps as HH:MM:SS.'>
                 </div>
                 <button class="bg-green-500 text-white p-3 rounded-lg align-center"

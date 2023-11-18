@@ -142,3 +142,7 @@ input:checked + .slider:before {
 .white-icon {
     filter: brightness(0) invert(1);
   }
+
+#time-inputs {
+    height: 48px;
+}

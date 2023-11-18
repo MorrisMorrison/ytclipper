@@ -13,6 +13,8 @@ const getTimeAsObject = (time) => {
   return { hours, minutes, seconds };
 };
 
+const getUrlInput = () => document.getElementById("url").value;
+
 const showProgressBar = () =>
   document.getElementById("progressBarWrapper").classList.remove("hidden");
 const hideProgressBar = () =>
@@ -24,7 +26,7 @@ const showVideoPlayer = () => {
     sources: [
       {
         type: "video/youtube",
-        src: document.getElementById("url").value,
+        src: getUrlInput(),
       },
     ],
   });
@@ -64,7 +66,7 @@ const convertToSeconds = (timeString) =>
 
 const onClipButtonClick = async () => {
   const url = window.location.href + "api/v1/createclip";
-  const youtubeUrl = document.getElementById("url").value;
+  const youtubeUrl = getUrlInput();
   let from = document.getElementById("from").value;
   let to = document.getElementById("to").value;
 
@@ -183,6 +185,12 @@ const setTheme = () => {
 };
 
 const onPreviewButtonClick = () => {
+  const url = getUrlInput();
+  if (!isYoutubeUrlValid(url)) {
+    toastr.error("Please provide a valid YouTube URL.", "Invalid Url");
+    return;
+  }
+
   if (isVideoPlayerVisible()) {
     hideVideoPlayer();
   } else {
