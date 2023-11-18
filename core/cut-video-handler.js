@@ -1,4 +1,4 @@
-const videoprocessing = require("./videoprocessing");
+const videoprocessing = require("./video-procesor");
 
 process.on("message", async (message) => {
   try {

@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const videoprocessing = require("../core/videoprocessing");
-const jobqueue = require("../core/jobqueue");
+const videoProcessor = require("../core/video-procesor");
+const jobStateManager = require("../core/job=state=manager");
 const path = require("path");
 const { fork } = require("child_process");
 
@@ -30,7 +30,7 @@ router.get("/getjobstatus", (req, res) => {
   console.log("SERVER - GETJOBSTATUS");
   const jobId = req.query.jobId;
 
-  jobqueue.handleJobStatus(res, jobId);
+  jobStateManager.handleJobStatus(res, jobId);
 });
 
 router.post("/createclip", async (req, res) => {
@@ -47,7 +47,7 @@ router.post("/createclip", async (req, res) => {
     return;
   }
 
-  const jobId = jobqueue.findAvailableJobId();
+  const jobId = jobStateManager.findAvailableJobId();
   if (jobId === -1) {
     console.error(`SERVER - CREATECLIP - Could not find available job id`);
     console.error(
@@ -58,42 +58,42 @@ router.post("/createclip", async (req, res) => {
     return;
   }
   console.log(`SERVER - CREATECLIP - Create job with id ${jobId}`);
-  jobqueue.createJob(jobId);
+  jobStateManager.createJob(jobId);
   console.log(`SERVER - CREATECLIP - Job created with id ${jobId}`);
 
   const videoId = getVideoIdByYoutubeUrl(req.body.url);
-  const fileName = `${videoPathTemplate}${videoId}${videoFileNameEnding}`;
-  const clipName = `${videoPathTemplate}${videoId}${clipFileNameEnding}`;
+  const fullDownloadVideoName = `${videoPathTemplate}${videoId}${videoFileNameEnding}`;
+  const fullClipName = `${videoPathTemplate}${videoId}${clipFileNameEnding}`;
   const clipFileName = videoId + '_clip.mp4';
   
-  const processDownloadVideo = fork('core/downloadVideo.js');
-  const processCutVideo = fork('core/cutVideo.js');
+  const downloadVideoHandlerFork = fork('core/download-video-handler.js');
+  const cutVideoHandlerFork = fork('core/cut-video-handler.js');
 
   try {
-    processDownloadVideo.send({
+    downloadVideoHandlerFork.send({
         url: req.body.url,
-        fileName: fileName,
+        fileName: fullDownloadVideoName,
         clipName: clipFileName
     });
 
     console.log('SERVER - CREATECLIP - Downloading video in child process started');
     console.log('SERVER - CREATECLIP - Downloading video from url: ' + req.body.url);
-    console.log('SERVER - CREATECLIP - Saving downloaded video in: ' + fileName);
+    console.log('SERVER - CREATECLIP - Saving downloaded video in: ' + fullDownloadVideoName);
 
-    processDownloadVideo.on('message', async (processDownloadResult) => {
+    downloadVideoHandlerFork.on('message', async (processDownloadResult) => {
         console.log('SERVER - CREATECLIP - Downloading video finished')
-        processCutVideo.send({
-            fileName: fileName,
-            clipName: clipName,
+        cutVideoFork.send({
+            fileName: fullDownloadVideoName,
+            clipName: fullClipName,
             from: req.body.from,
             to: req.body.to
         })
         console.log('SERVER - CREATECLIP - Cutting video started')
 
 
-        processCutVideo.on('message', (processCutResult) => {
+        cutVideoHandlerFork.on('message', (processCutResult) => {
             console.log('SERVER - CREATECLIP - Cutting video finished')
-            jobqueue.finishJob(jobId, clipFileName);
+            jobStateManager.finishJob(jobId, clipFileName);
         })
     })
 
@@ -103,7 +103,7 @@ router.post("/createclip", async (req, res) => {
     console.error(
       `SERVER - CREATECLIP - Request body: ${JSON.stringify(req.body)}`
     );
-    jobqueue.removeJob(jobId);
+    jobStateManager.removeJob(jobId);
     res.status(500).send();
   }
 });
@@ -140,7 +140,7 @@ router.get("/getvideoduration", async (req, res) => {
   }
 
   try {
-    const duration = await videoprocessing.getVideoDurationAsync(
+    const duration = await videoProcessor.getVideoDurationAsync(
       req.query.youtubeUrl
     );
     res.status(200).send(duration);

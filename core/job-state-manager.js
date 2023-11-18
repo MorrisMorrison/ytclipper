@@ -6,14 +6,13 @@ const jobStatus = {
   CREATED: "created",
 };
 
-const JOB_QUEUE_SIZE = 10;
-const jobQueue = new Array(JOB_QUEUE_SIZE).fill(null);
+const MAX_JOBS_COUNT = 10;
+const jobStateManager = new Array(MAX_JOBS_COUNT).fill(null);
 
 const findAvailableJobId = () => {
-  const availableJobIndex = jobQueue.findIndex(
+  const availableJobIndex = jobStateManager.findIndex(
     (job) =>
       !job ||
-      job.status === jobStatus.DONE ||
       job.status === jobStatus.ERROR ||
       job.status === jobStatus.TIMEOUT
   );
@@ -21,7 +20,7 @@ const findAvailableJobId = () => {
 };
 
 const handleJobStatus = (res, jobId) => {
-  const job = jobQueue[jobId];
+  const job = jobStateManager[jobId];
 
   if (!job) {
     res.status(400).send();
@@ -48,15 +47,21 @@ const handleJobStatus = (res, jobId) => {
 };
 
 const createJob = (jobId) => {
-  jobQueue[jobId] = { status: jobStatus.CREATED };
+  jobStateManager[jobId] = { status: jobStatus.CREATED };
+};
+// TODO: Track created and finished time to be able to remove jobs after 1 minute
+const finishJob = (jobId, clipName) => {
+  jobStateManager[jobId] = { status: jobStatus.DONE, clipName };
 };
 
-const finishJob = (jobId, clipName) => {
-  jobQueue[jobId] = { status: jobStatus.DONE, clipName };
+
+
+const failJob = (jobId, error) => {
+  jobStateManager[jobId] = { status: jobStatus.ERROR, error };
 };
 
 const removeJob = (jobId) => {
-  jobQueue[jobId] = null;
+  jobStateManager[jobId] = null;
 };
 
 module.exports = {
@@ -64,5 +69,6 @@ module.exports = {
     handleJobStatus,
     findAvailableJobId,
     finishJob,
-    removeJob
+    removeJob,
+    failJob
   };
