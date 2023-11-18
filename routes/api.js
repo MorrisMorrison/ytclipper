@@ -142,7 +142,7 @@ router.get("/clip", (req, res) => {
   });
 });
 
-router.get("/job/status", (req, res) => {
+router.get("/jobs/status", (req, res) => {
   console.log(
     "SERVER - GETJOBSTATUS - Request query:" + JSON.stringify(req.query)
   );
