@@ -19,6 +19,10 @@ const showProgressBar = () =>
   document.getElementById("progressBarWrapper").classList.remove("hidden");
 const hideProgressBar = () =>
   document.getElementById("progressBarWrapper").classList.add("hidden");
+const enableClipButton = () =>
+  (document.getElementById("clipButton").disabled = false);
+const disableClipButton = () =>
+  (document.getElementById("clipButton").disabled = true);
 
 const showVideoPlayer = () => {
   const player = videojs("video-player", {
@@ -46,6 +50,9 @@ const showDownloadLink = (downloadUrl) => {
   downloadLinkUrlWrapper.classList.remove("hidden");
 };
 
+const hideDownloadLink = () =>
+  document.getElementById("downloadLinkWrapper").classList.add("hidden");
+
 const getVideoDuration = async (youtubeUrl) => {
   const url =
     window.location.href + "api/v1/getvideoduration?youtubeUrl=" + youtubeUrl;
@@ -56,8 +63,11 @@ const getVideoDuration = async (youtubeUrl) => {
       return durationInSeconds;
     }
   } catch (error) {
-    console.error("CLIENT - GETJOBSTATUS - Error fetching video duration:", error);
-    // Handle error
+    console.error(
+      "CLIENT - GETJOBSTATUS - Error fetching video duration:",
+      error
+    );
+    enableClipButton();
   }
 };
 
@@ -65,6 +75,8 @@ const convertToSeconds = (timeString) =>
   timeObjectToSeconds(getTimeAsObject(timeString));
 
 const onClipButtonClick = async () => {
+  disableClipButton();
+
   const url = window.location.href + "api/v1/createclip";
   const youtubeUrl = getUrlInput();
   let from = document.getElementById("from").value;
@@ -72,16 +84,19 @@ const onClipButtonClick = async () => {
 
   if (url === "" || from === "" || to === "") {
     toastr.error("Please provide a URL and both timestamps.", "Invalid Input");
+    enableClipButton();
     return;
   }
 
   if (!isTimeInputValid(from) || !isTimeInputValid(to)) {
     toastr.error("Please provide timestamps as HH:MM:SS.", "Invalid Format");
+    enableClipButton();
     return;
   }
 
   if (!isYoutubeUrlValid(youtubeUrl)) {
     toastr.error("Please provide a valid YouTube URL.", "Invalid Url");
+    enableClipButton();
     return;
   }
 
@@ -99,6 +114,8 @@ const onClipButtonClick = async () => {
         "Please use timestamps that are within the video's duration.",
         "Invalid Timestamps"
       );
+
+      enableClipButton();
       return;
     }
 
@@ -134,6 +151,7 @@ const onClipButtonClick = async () => {
     }
   } catch (error) {
     console.error("CLIENT - GETJOBSTATUS - An error occurred:", error);
+    enableClipButton();
   }
 };
 
@@ -150,6 +168,7 @@ const getJobStatus = async (jobId) => {
         const downloadUrl = "/api/v1/download?videoName=" + result;
         showDownloadLink(downloadUrl);
         window.open(downloadUrl);
+        enableClipButton();
         break;
       case 201:
         setTimeout(() => getJobStatus(jobId), 2000);
@@ -159,22 +178,26 @@ const getJobStatus = async (jobId) => {
           "The download timed out. Please try again in a few minutes or use the contact form.",
           "Download Timeout"
         );
+        enableClipButton();
         break;
       case 500:
         toastr.error(
           "An error occurred when downloading the clip. Please try again in a few minutes or use the contact form.",
           "Download Error"
         );
+        enableClipButton();
         break;
       default:
         toastr.error(
           "An error occurred when retrieving the job status. Please try again in a few minutes or use the contact form.",
           "Unknown Error"
         );
+        enableClipButton();
         break;
     }
   } catch (error) {
     console.error("CLIENT - GETJOBSTATUS - An error occurred:", error);
+    enableClipButton();
   }
 };
 

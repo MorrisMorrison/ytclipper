@@ -27,8 +27,16 @@ const getVideoIdByYoutubeUrl = (url) => {
   return match && match[7] && match[7].length === 11 ? match[7] : false;
 };
 
+const isGetJobStatusRequestValid = (req) => req.query.jobId !== "";
 router.get("/getjobstatus", (req, res) => {
-  console.log("SERVER - GETJOBSTATUS");
+  console.log("SERVER - GETJOBSTATUS - Request query:" + JSON.stringify(req.query));
+  if (!isGetJobStatusRequestValid(req)) {
+    return res
+      .status(400)
+      .send(
+        "Invalid getjobstatus request. Missing or empty jobId parameter."
+      );
+  }
   const jobId = req.query.jobId;
 
   jobStateManager.handleJobStatus(res, jobId);
@@ -91,7 +99,7 @@ router.post("/createclip", async (req, res) => {
       "SERVER - CREATECLIP - Saving downloaded video in: " +
         fullDownloadVideoName
     );
-    // TODO: use values from results
+    
     downloadClipHandlerFork.on("message", async (result) => {
       if (result.error) {
         console.error(
@@ -101,7 +109,7 @@ router.post("/createclip", async (req, res) => {
         jobStateManager.failJob(jobId);
         return;
       }
-      
+
       console.log("SERVER - CREATECLIP - Downloading clip finished");
       jobStateManager.finishJob(jobId, clipFileName);
     });
@@ -120,7 +128,7 @@ router.post("/createclip", async (req, res) => {
 
 const isDownloadRequestValid = (req) => req.query.videoName !== "";
 router.get("/download", (req, res) => {
-  console.log("SERVER - DOWNLOAD");
+  console.log("SERVER - DOWNLOAD - Request query:" + JSON.stringify(req.query));
 
   if (!isDownloadRequestValid(req)) {
     return res
@@ -130,16 +138,17 @@ router.get("/download", (req, res) => {
 
   const videoFilePath = path.join(videoPathTemplate, req.query.videoName);
   res.download(videoFilePath, (err) => {
-    if (err) {
-      console.error("SERVER - DOWNLOAD - Error:", err);
-      return res.status(500).send("Error downloading the video.");
-    }
-  });
+      if (err) {
+        console.error("SERVER - DOWNLOAD - Error:", err);
+        return res.status(500).send("Error downloading the video.");
+      }
+      deleteFile(videoFilePath);
+    });
 });
 
 const isGetVideoDurationRequestValid = (req) => req.query.youtubeUrl !== "";
 router.get("/getvideoduration", async (req, res) => {
-  console.log("SERVER - GETVIDEODURATION");
+  console.log("SERVER - GETVIDEODURATION - Request query:" + JSON.stringify(req.query));
 
   if (!isGetVideoDurationRequestValid(req)) {
     return res
@@ -169,7 +178,7 @@ const deleteFile = (filePath) => {
     if (err) {
       console.error(`SERVER - DELETE FILE - Error deleting file: ${err}`);
     } else {
-      console.log("SERVER - DELETE FILE - File deleted successfully");
+      console.log(`SERVER - DELETE FILE - File deleted successfully: ${filePath}`);
     }
   });
 };
