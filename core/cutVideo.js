@@ -1,6 +1,7 @@
 const videoprocessing = require('./videoprocessing');
 
 process.on('message', async(message) => {
+    console.log("SERVER - CUTVIDEOASYNC - Cut video " + message.fileName)
     const result = await videoprocessing.cutVideoAsync(message.fileName, message.clipName, message.from, message.to);
     process.send(result);
 })

@@ -2,7 +2,7 @@ const youtubedl = require("youtube-dl-exec");
 const ffmpeg = require("fluent-ffmpeg");
 
 const getVideoDurationAsync = (url) =>
-youtubedl(url, {
+  youtubedl(url, {
     noWarnings: true,
     skipDownload: true,
     getDuration: true,
@@ -10,7 +10,10 @@ youtubedl(url, {
 
 const downloadVideoAsync = (url, videoPath, videoName) =>
   new Promise((resolve) => {
-    youtubedl(url,{output: videoPath, format: "mp4"}).then(res => {console.log(res);resolve(videoName)});
+    youtubedl(url, { output: videoPath, format: "mp4" }).then((res) => {
+      console.log(res);
+      resolve(videoName);
+    });
   });
 
 const cutVideoAsync = (fileName, clipName, from, to) =>
@@ -21,11 +24,13 @@ const cutVideoAsync = (fileName, clipName, from, to) =>
       .on("end", function () {
         resolve(clipName);
       })
-      .on("error", (error) => {
-        console.log(
+      .on("error", (error, stdout, stderr) => {
+        console.error(
           "SERVER - CUTVIDEOASYNC - Error occurred while cutting video: "
         );
-        console.log(error);
+        console.error(error);
+        console.error(stdout);
+        console.error(stderr);
       })
       .save(clipName);
   });
