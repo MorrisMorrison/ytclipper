@@ -1,25 +1,27 @@
 # ytclipper
 Simple web application to create clips from youtube videos and download them.
+The goal of this project is to play around with unknown technologies.
 
 1. Enter YouTube URL
-2. Enter start time
-3. Enter end time
+2. Enter start time (HH:MM:SS)
+3. Enter end time (HH:MM:SS)
 4. Download Clip
+
+Downloading the clip might take a while depending on the video, as we still download the whole video and then cut it with ffmpeg afterwards.
 
 ## Built With
 - express.js 
-- handlebars
 - fluent-ffmpeg
-- youtube-dl
+- yt-dlp
 - tailwind css
+- video.js
 - toastr
 
 ## Run locally
 ### Requirements
 - node
 - python3
-- ffmpeg
-- certifi
+- certifi?
 
 ### Setup
 1. Install the required packages
@@ -34,17 +36,16 @@ Or run as docker container
 ### Configuration
 - Port can be configured via env variable PORT (default 4001)
 
-
-
 ## TODO
 - [x] input validation
 - [x] let users enter the end time instead of duration
 - [x] add loading-screen, or some kind of progress indicator
-- [x] do video processing with background workers as its CPU heavy
+- [x] do video processing async with background workers
 - [x] add dark mode
-- [ ] embed video player into the site
+- [x] embed video player into the site
+- [x] migrate to yt-dlp from youtube-dl
 - [ ] let users set start and end time using a slider embedded in the video player
 - [ ] prevent click spamming
-- [ ] automatically delete downloaded videos
-- [ ] use yt-dlp to directly cut videos ,so we do not have to download the whole video
+- [ ] automatically delete downloaded videos (we only delete the video we use to cut)
+- [ ] use yt-dlp to directly cut videos ,so we do not have to download the whole video and can remove all ffmpeg related deps
 - [ ] rewrite in go
