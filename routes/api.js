@@ -92,7 +92,16 @@ router.post("/createclip", async (req, res) => {
         fullDownloadVideoName
     );
     // TODO: use values from results
-    downloadClipHandlerFork.on("message", async (_) => {
+    downloadClipHandlerFork.on("message", async (result) => {
+      if (result.error) {
+        console.error(
+          `SERVER - CREATECLIP - Error downloading clip: ${clipFileName} - jobId: ${jobId}`,
+          result.error
+        );
+        jobStateManager.failJob(jobId);
+        return;
+      }
+      
       console.log("SERVER - CREATECLIP - Downloading clip finished");
       jobStateManager.finishJob(jobId, clipFileName);
     });

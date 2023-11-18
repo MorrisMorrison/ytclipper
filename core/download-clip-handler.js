@@ -3,9 +3,13 @@ const jobStateManager = require("./job-state-manager");
 
 process.on("message", async (message) => {
   try {
-    console.log(`SERVER - DOWNLOADCLIPHANDLER - Downloading clip from ${message.url} to ${message.clipName}`);;
-    console.log(`SERVER - DOWNLOADCLIPHANDLER - Cut video from ${message.from} to ${message.to}`);
-    
+    console.log(
+      `SERVER - DOWNLOADCLIPHANDLER - Downloading clip from ${message.url} to ${message.clipName}`
+    );
+    console.log(
+      `SERVER - DOWNLOADCLIPHANDLER - Cut video from ${message.from} to ${message.to}`
+    );
+
     const result = await videoprocessing.downloadVideoAsync(
       message.url,
       message.fileName,
@@ -15,10 +19,15 @@ process.on("message", async (message) => {
       message.jobId
     );
 
-    console.log("SERVER - DOWNLOADCLIPHANDLER - Clip download completed successfully.");
+    console.log(
+      "SERVER - DOWNLOADCLIPHANDLER - Clip download completed successfully."
+    );
     process.send(result);
   } catch (error) {
-    console.error(`SERVER - DOWNLOADCLIPHANDLER - Error downloading clip: ${clipName} - jobId: ${message.jobId}`, error);
+    console.error(
+      `SERVER - DOWNLOADCLIPHANDLER - Error downloading clip: ${message.clipName} - jobId: ${message.jobId}`,
+      error
+    );
     jobStateManager.failJob(message.jobId);
     process.send({ error: error.message });
   }
