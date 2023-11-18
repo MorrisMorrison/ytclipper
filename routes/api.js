@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const videoProcessor = require("../core/video-procesor");
-const jobStateManager = require("../core/job=state=manager");
+const jobStateManager = require("../core/job-state-manager");
 const path = require("path");
 const { fork } = require("child_process");
 
@@ -79,10 +79,10 @@ router.post("/createclip", async (req, res) => {
     console.log('SERVER - CREATECLIP - Downloading video in child process started');
     console.log('SERVER - CREATECLIP - Downloading video from url: ' + req.body.url);
     console.log('SERVER - CREATECLIP - Saving downloaded video in: ' + fullDownloadVideoName);
-
+    // TODO: use values from results 
     downloadVideoHandlerFork.on('message', async (processDownloadResult) => {
         console.log('SERVER - CREATECLIP - Downloading video finished')
-        cutVideoFork.send({
+        cutVideoHandlerFork.send({
             fileName: fullDownloadVideoName,
             clipName: fullClipName,
             from: req.body.from,
@@ -93,6 +93,7 @@ router.post("/createclip", async (req, res) => {
 
         cutVideoHandlerFork.on('message', (processCutResult) => {
             console.log('SERVER - CREATECLIP - Cutting video finished')
+            // TODO: delete original video
             jobStateManager.finishJob(jobId, clipFileName);
         })
     })
