@@ -3,7 +3,8 @@ Simple web application to create clips from youtube videos and download them.
 The goal of this project is just to play around with unknown technologies.
 
 
-https://github.com/MorrisMorrison/ytclipper/assets/22982151/23c5251b-236e-47fe-b754-69bb58150dba
+
+https://github.com/MorrisMorrison/ytclipper/assets/22982151/bc950608-114f-4d10-b9cd-e46c5cf37333
 
 
 1. Enter YouTube URL
