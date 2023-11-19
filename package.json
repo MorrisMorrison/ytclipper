@@ -4,13 +4,14 @@
   "private": true,
   "scripts": {
     "start": "yarn build && node app.js",
-    "build": "yarn build:css && yarn publish:icons && yarn publish:video && yarn publish:scripts && yarn publish:views && yarn publish:toastr",
+    "build": "yarn build:css && yarn publish:icons && yarn publish:video && yarn publish:scripts && yarn publish:views && yarn publish:toastr && yarn publish:jquery",
     "build:css": "postcss ui/styles/tailwind.css -o public/styles/tailwind.css && postcss ui/styles/custom.css -o public/styles/custom.css",
     "publish:icons": "copyfiles -f ui/icons/* public/icons/",
     "publish:video": "copyfiles -f node_modules/videojs-youtube/dist/Youtube.min.js public/scripts/ && copyfiles -f node_modules/video.js/dist/video-js.min.css public/styles/ && copyfiles -f node_modules/video.js/dist/video.min.js public/scripts/",
     "publish:scripts": "copyfiles -f ui/scripts/* public/scripts/",
     "publish:views": "copyfiles -f ui/views/* public/",
-    "publish:toastr": "copyfiles -f node_modules/toastr/build/toastr.min.css public/styles/ && copyfiles -f node_modules/toastr/build/toastr.min.js public/scripts/"
+    "publish:toastr": "copyfiles -f node_modules/toastr/build/toastr.min.css public/styles/ && copyfiles -f node_modules/toastr/build/toastr.min.js public/scripts/",
+    "publish:jquery": "copyfiles -f node_modules/jquery/dist/jquery.min.js public/scripts/"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
