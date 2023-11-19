@@ -1,7 +1,5 @@
 # ytclipper
 Simple web application to create clips from youtube videos and download them.
-The goal of this project is just to play around with unknown technologies.
-
 
 
 https://github.com/MorrisMorrison/ytclipper/assets/22982151/bc950608-114f-4d10-b9cd-e46c5cf37333
@@ -26,8 +24,9 @@ Downloading the clip might take a while depending on the video, as we still down
 ### Requirements
 - node
 - python3
+- python3-pip
+- python3-certifi
 - ffmpeg
-- certifi?
 
 ### Setup
 1. Install the required packages
@@ -51,9 +50,9 @@ Or run as docker container
 - [x] embed video player into the site
 - [x] migrate to yt-dlp from youtube-dl
 - [ ] let users set start and end time using a slider embedded in the video player
-- [ ] prevent click spamming
-- [ ] automatically delete downloaded videos
-- [x] use yt-dlp to directly cut videos instead of downloading the whole video and then cutting it with ffmpeg manually
-- [ ] track time of jobs
-- [ ] kill suspended jobs after a specified timeput
-- [ ] rewrite in go
+- [x] prevent click spamming
+- [x] automatically delete downloaded videos
+- [x] use yt-dlp to directly download a section of a video
+- [ ] track created/finished time of jobs
+- [ ] kill suspended jobs after a specified timeout
+- [ ] rewrite everything in go
