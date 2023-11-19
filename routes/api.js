@@ -39,9 +39,6 @@ router.get("/video/duration", async (req, res) => {
 router.post("/clip", async (req, res) => {
   console.log("SERVER - CREATECLIP");
   console.log("SERVER - CREATECLIP - Request body:" + JSON.stringify(req.body));
-  console.log(
-    `SERVER - CREATECLIP - Request body: ${JSON.stringify(req.body)}`
-  );
 
   const isCreateClipRequestValid =
     req.body && req.body.url && isYoutubeUrlValid(req.body.url);
