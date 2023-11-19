@@ -4,12 +4,10 @@
   "private": true,
   "scripts": {
     "start": "yarn build && node app.js",
-    "build": "yarn build:css && yarn build:icons && yarn build:video && yarn build:scripts && yarn build:views",
+    "build": "yarn build:public && yarn build:css && yarn build:videojs",
+    "build:public": "copyfiles -f ui/* public/",
     "build:css": "postcss ui/styles/tailwind.css -o public/styles/tailwind.css && postcss ui/styles/custom.css -o public/styles/custom.css",
-    "build:icons": "copyfiles -f ui/icons/* public/icons/",
-    "build:video": "copyfiles -f node_modules/videojs-youtube/dist/Youtube.min.js public/scripts/ && copyfiles -f node_modules/video.js/dist/video-js.min.css public/styles/",
-    "build:scripts": "copyfiles -f ui/scripts/* public/scripts/",
-    "build:views": "copyfiles -f ui/views/* public/"
+    "build:videojs": "copyfiles -f node_modules/videojs-youtube/dist/Youtube.min.js public/scripts/ && copyfiles -f node_modules/video.js/dist/video-js.min.css public/styles/"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
