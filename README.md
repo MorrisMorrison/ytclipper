@@ -10,12 +10,11 @@ https://github.com/MorrisMorrison/ytclipper/assets/22982151/bc950608-114f-4d10-b
 3. Enter end time (HH:MM:SS)
 4. Download Clip
 
-Downloading the clip might take a while depending on the video, as we still download the whole video and then cut it with ffmpeg afterwards.
 
 ## Built With
 - express.js 
-- fluent-ffmpeg
 - yt-dlp
+- ffmpeg
 - tailwind css
 - video.js
 - toastr
