@@ -4,12 +4,13 @@
   "private": true,
   "scripts": {
     "start": "yarn build && node app.js",
-    "build": "yarn build:css && yarn build:icons && yarn build:video && yarn build:scripts && yarn build:views",
+    "build": "yarn build:css && yarn publish:icons && yarn publish:video && yarn publish:scripts && yarn publish:views && yarn publish:toastr",
     "build:css": "postcss ui/styles/tailwind.css -o public/styles/tailwind.css && postcss ui/styles/custom.css -o public/styles/custom.css",
-    "build:icons": "copyfiles -f ui/icons/* public/icons/",
-    "build:video": "copyfiles -f node_modules/videojs-youtube/dist/Youtube.min.js public/scripts/ && copyfiles -f node_modules/video.js/dist/video-js.min.css public/styles/",
-    "build:scripts": "copyfiles -f ui/scripts/* public/scripts/",
-    "build:views": "copyfiles -f ui/views/* public/"
+    "publish:icons": "copyfiles -f ui/icons/* public/icons/",
+    "publish:video": "copyfiles -f node_modules/videojs-youtube/dist/Youtube.min.js public/scripts/ && copyfiles -f node_modules/video.js/dist/video-js.min.css public/styles/ && copyfiles -f node_modules/video.js/dist/video.min.js public/scripts/",
+    "publish:scripts": "copyfiles -f ui/scripts/* public/scripts/",
+    "publish:views": "copyfiles -f ui/views/* public/",
+    "publish:toastr": "copyfiles -f node_modules/toastr/build/toastr.min.css public/styles/ && copyfiles -f node_modules/toastr/build/toastr.min.js public/scripts/"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
@@ -22,6 +23,7 @@
     "morgan": "~1.9.1",
     "postcss": "^8.4.28",
     "postcss-cli": "^10.1.0",
+    "toastr": "^2.1.4",
     "videojs-youtube": "^3.0.1",
     "yarn": "^1.22.19",
     "youtube-dl-exec": "~2.4.7"
