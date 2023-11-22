@@ -14,7 +14,7 @@ const downloadVideoAsync = (url, videoPath, videoName, from, to, jobId) =>
     const downloaderArgs = `ffmpeg_i:-ss ${from} -to ${to}`;
     youtubedl(url, {
       output: videoPath,
-      format: "18",
+      format: "22",
       downloader: "ffmpeg",
       downloaderArgs: downloaderArgs,
     })
