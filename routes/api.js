@@ -8,8 +8,7 @@ const path = require("path");
 const { fork } = require("child_process");
 
 const appDir = path.dirname(require.main.filename);
-// const videoPathTemplate = (appDir + `/videos/`).replace("/bin", "");
-const videoPathTemplate = '';
+const videoPathTemplate = (appDir + `/videos/`).replace("/bin", "");
 const videoFormat = ".mp4";
 
 router.get("/video/duration", async (req, res) => {
