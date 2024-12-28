@@ -114,7 +114,7 @@ router.post("/clip", async (req, res) => {
       `SERVER - CREATECLIP - Request body: ${JSON.stringify(req.body)}`
     );
     jobStateManager.failJob(jobId);
-    deleteFile(fullDownloadVideoName);
+    //deleteFile(fullDownloadVideoName);
     res.status(500).send();
   }
 });
@@ -135,7 +135,7 @@ router.get("/clip", (req, res) => {
       console.error("SERVER - DOWNLOAD - Error:", err);
       return res.status(500).send("Error downloading the video.");
     }
-    deleteFile(videoFilePath);
+    //deleteFile(videoFilePath);
   });
 });
 
