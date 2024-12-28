@@ -19,6 +19,7 @@ const downloadVideoAsync = (url, videoPath, videoName, from, to, jobId) =>
       downloaderArgs: downloaderArgs,
     })
       .then((res) => {
+        console.log("SERVER - DOWNLOADVIDEOASYNC - youtubedl download successful.")
         console.log(res);
         resolve(videoName);
       })
