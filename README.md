@@ -54,4 +54,5 @@ Or run as docker container
 - [x] use yt-dlp to directly download a section of a video
 - [ ] track created/finished time of jobs
 - [ ] kill suspended jobs after a specified timeout
+- [ ] let users select desired format by checking yt-dlp -F "providedUrl"  
 - [ ] rewrite everything in go
