@@ -1,9 +1,9 @@
-const videoprocessing = require("./video-procesor");
+const videoprocessing = require("./video-processor");
 
 process.on("message", async (message) => {
   try {
     console.log(
-      `SERVER - DOWNLOADCLIPHANDLER - Downloading clip from ${message.url} to ${message.filename}`
+      `SERVER - DOWNLOADCLIPHANDLER - Downloading clip from ${message.url} to ${message.fileName}`
     );
     console.log(
       `SERVER - DOWNLOADCLIPHANDLER - Cut video from ${message.from} to ${message.to}`

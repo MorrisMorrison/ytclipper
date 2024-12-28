@@ -2,7 +2,7 @@ const fs = require("fs");
 
 const express = require("express");
 const router = express.Router();
-const videoProcessor = require("../core/video-procesor");
+const videoProcessor = require("../core/video-processor");
 const jobStateManager = require("../core/job-state-manager");
 const path = require("path");
 const { fork } = require("child_process");
